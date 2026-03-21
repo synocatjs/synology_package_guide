@@ -5,7 +5,7 @@
   - [开发环境](base/dev-env.md)
   - [开发工具](base/dev-tools.md)
 - [快速开始]
-  - [系统要求](start/quick.md)
+  - [系统要求](start/requirements.md)
 
 
 - [SPK 包介绍](spk_introduction/)
@@ -17,3 +17,92 @@
   - [wizard ui 文件](spk_introduction/wizard_ui_files.md)
 - dsm 集成
   - [套件文件系统层级标准](synology_dsm_integration/fhs.md)
+
+- [办公套件 Web API](office_suite_web_api/)
+  - [Drive](office_suite_web_api/drive/)
+    - [登陆](office_suite_web_api/drive/auth/sign_in.md)
+    - [登出](office_suite_web_api/drive/auth/sign_out.md)
+    ---
+    - [转换到群晖office](office_suite_web_api/drive/files/convert_to_synology_office.md)
+    - [复制文件或者文件夹](office_suite_web_api/drive/files/copy_file_or_folder.md)
+    - [获取元数据](office_suite_web_api/drive/files/get_metadata.md)
+    - [更新元数据](office_suite_web_api/drive/files/update_metadata.md)
+    - [创建文件或者文件夹](office_suite_web_api/drive/files/create_file_or_folder.md)
+    - [删除文件或者文件夹](office_suite_web_api/drive/files/delete_file_or_folder.md)
+    - [下载文件或者文件夹](office_suite_web_api/drive/files/download_file_or_folder.md)
+    - [获取文件或者文件夹](office_suite_web_api/drive/files/get_file_or_folder.md)
+    - [标签](office_suite_web_api/drive/files/labels.md)
+    - [列出收藏列表](office_suite_web_api/drive/files/list_items_marked_with_a_star.md)
+    - [列出最近使用列表](office_suite_web_api/drive/files/list_items_recently_used.md)
+    - [获取与我共享的列表](office_suite_web_api/drive/files/list_items_shared_with_signed_in_user.md)
+    - [获取指定标签的项目列表](office_suite_web_api/drive/files/list_items_with_specified_labels.md)
+    - [获取父文件夹列表](office_suite_web_api/drive/files/List_parent_folder.md)
+    - [列出所有文件和文件夹](office_suite_web_api/drive/files/list_shared_items_in_my_drive_or_team_folders.md)
+    - [移动文件或文件夹](office_suite_web_api/drive/files/move.md)
+    - [请求访问权限](office_suite_web_api/drive/files/request_permission.md)
+    - [搜索](office_suite_web_api/drive/files/search.md)
+    - [收藏](office_suite_web_api/drive/files/stars.md)
+    - [缩略图](office_suite_web_api/drive/files/thumbnails.md)
+    - [上传文件](office_suite_web_api/drive/files/upload.md)
+    - [从 NAS 共享文件夹上传](office_suite_web_api/drive/files/upload_from_nas_shared_folders.md)
+    ---
+    - [创建共享链接](office_suite_web_api/drive/file_and_folder_sharing/create_sharing_link.md)
+    - [列出权限](office_suite_web_api/drive/file_and_folder_sharing/list_permissions.md)
+    - [更新权限](office_suite_web_api/drive/file_and_folder_sharing/update_permissions.md)
+    ---
+    - [获取团队文件夹](office_suite_web_api/drive/team_folders/get.md)
+    - [获取团队成员](office_suite_web_api/drive/team_folders/get_members.md)
+    ---
+    - [获取文件](office_suite_web_api/drive/file_request/get.md)
+    - [更新文件](office_suite_web_api/drive/file_request/update.md)
+    - [删除文件](office_suite_web_api/drive/file_request/delete.md)
+    - [列出文件](office_suite_web_api/drive/file_request/list.md)
+    - [创建文件](office_suite_web_api/drive/file_request/create.md)
+    ---
+    - [获取标签](office_suite_web_api/drive/labels/get.md)
+    - [更新标签](office_suite_web_api/drive/labels/update.md)
+    - [删除标签](office_suite_web_api/drive/labels/delete.md)
+    - [创建标签](office_suite_web_api/drive/labels/create.md)
+    - [获取共享标签](office_suite_web_api/drive/labels/get_shared_label.md)
+    - [更新共享标签](office_suite_web_api/drive/labels/update_shared_label.md)
+    ---
+    - [列出已启用的团队文件夹](office_suite_web_api/drive/admin_console/list_enabled_team_folders.md)
+    - [启用、禁用或配置团队文件夹和 My Drive 设置](office_suite_web_api/drive/admin_console/enable_disable_or_configure_team_folders_and_my_drive_settings.md)
+    - [列出共享文件夹和设置](office_suite_web_api/drive/admin_console/list_shared_folders_and_settings.md)
+    - [列出客户端连接](office_suite_web_api/drive/admin_console/list_connections.md)
+    - [解除客户端连接](office_suite_web_api/drive/admin_console/unlink_with_given_client.md)
+    ---
+    - [创建 webhook](office_suite_web_api/drive/webhooks/create.md)
+    - [获取 webhook](office_suite_web_api/drive/webhooks/get.md)
+    - [更新 webhook](office_suite_web_api/drive/webhooks/update.md)
+    - [删除 webhook](office_suite_web_api/drive/webhooks/delete.md)
+    - [列出 webhook](office_suite_web_api/drive/webhooks/list.md)
+    - [资源](office_suite_web_api/drive/resources.md)
+  - [电子表格](office_suite_web_api/spreadsheet/)
+    - [设置](office_suite_web_api/spreadsheet/prerequisites/setup.md)  
+    - [API Token](office_suite_web_api/spreadsheet/prerequisites/api_token.md)
+    ---
+    - [登陆](office_suite_web_api/spreadsheet/auth/sign_in.md)
+    - [注销](office_suite_web_api/spreadsheet/auth/revoke.md)
+    ---
+    - [获取单元格值](office_suite_web_api/spreadsheet/values/get.md)
+    - [写入单元格值](office_suite_web_api/spreadsheet/values/write.md)
+    - [追加数据](office_suite_web_api/spreadsheet/values/append.md)
+    ---
+    - [获取单元格样式](office_suite_web_api/spreadsheet/styles/get.md)
+    - [写入单元格样式](office_suite_web_api/spreadsheet/styles/write.md)
+    ---
+    - [创建工作表](office_suite_web_api/spreadsheet/sheet/create.md)
+    - [导出工作表](office_suite_web_api/spreadsheet/sheet/export.md)
+    - [重命名工作表](office_suite_web_api/spreadsheet/sheet/rename.md)
+    - [删除工作表](office_suite_web_api/spreadsheet/sheet/delete.md)
+    ---
+    - [创建电子表格](office_suite_web_api/spreadsheet/spreadsheet/create.md)
+    - [获取电子表格](office_suite_web_api/spreadsheet/spreadsheet/get.md)
+    - [导出 XLSX](office_suite_web_api/spreadsheet/spreadsheet/export.md)
+    - [批量更新](office_suite_web_api/spreadsheet/spreadsheet/batch_update.md)
+    - [删除电子表格](office_suite_web_api/spreadsheet/spreadsheet/delete.md)
+    ---
+    - [获取服务器指标](office_suite_web_api/spreadsheet/statistics/get_metric.md)
+    - [获取用户数量](office_suite_web_api/spreadsheet/statistics/get_user_count.md)
+

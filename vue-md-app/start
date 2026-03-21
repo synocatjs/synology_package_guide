@@ -1,25 +1,31 @@
 #!/bin/sh
-# DSM Package Start Script
+# ============================================================
+# DSM Package: MarkdownEditor — Start Script
 # Logs to /var/log/packages/MarkdownEditor.log (DSM 7+)
+# ============================================================
 
 PACKAGE_NAME="MarkdownEditor"
-PKG_HOME="/var/packages/${PACKAGE_NAME}/home"
 PKG_TARGET="/var/packages/${PACKAGE_NAME}/target"
 LOG_FILE="/var/log/packages/${PACKAGE_NAME}.log"
 
 log() {
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [START] $1" >> "${LOG_FILE}"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [START] $*" >> "${LOG_FILE}"
 }
 
 log "Starting ${PACKAGE_NAME}..."
 
-# Verify UI directory exists (linked via dsmuidir)
+# Verify built UI exists (output of: npm run build)
 if [ ! -d "${PKG_TARGET}/ui" ]; then
-    log "ERROR: UI directory not found at ${PKG_TARGET}/ui"
+    log "ERROR: UI directory missing at ${PKG_TARGET}/ui"
+    log "Hint: Run 'npm run build' in the ui/ directory first."
+    exit 1
+fi
+
+if [ ! -f "${PKG_TARGET}/ui/index.html" ]; then
+    log "ERROR: index.html not found — build may have failed."
     exit 1
 fi
 
 log "UI directory OK: ${PKG_TARGET}/ui"
-log "${PACKAGE_NAME} started successfully"
-
+log "${PACKAGE_NAME} started successfully."
 exit 0
