@@ -1,6 +1,6 @@
 # 简介
 
-!> 需要提前申请开发者权限： https://office-suite-api.synology.com
+!> 需要开发者权限，点击登陆后填写表单即可： https://office-suite-api.synology.com
 
 
 Synology Office Suite API 为开发者提供了强大的工具，通过 REST API 和 Webhook 支持，实现工作流自动化、提升生产力，并安全地将 Synology 数据与第三方平台集成。Synology API 文档简化了开发流程，提供全面的指南、示例和测试工具，以简化集成并为多样化的业务需求创建定制化、安全的解决方案。本网站除 Synology Spreadsheet 外的所有 API 均需要：

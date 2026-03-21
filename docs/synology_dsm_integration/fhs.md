@@ -5,7 +5,7 @@
 
 **安装在卷分区上的套件：**
 
-```
+```bash
 /var/packages/[package_name]
 ├── etc     -> /volume[volume_number]/@appconf/[package_name] （自 7.0-41330 起移至卷，旧路径仍可用）
 ├── var     -> /volume[volume_number]/@appdata/[package_name]
@@ -16,7 +16,7 @@
 
 **安装在系统分区上的套件：**
 
-```
+```bash
 /var/packages/[package_name]
 ├── etc     -> /usr/syno/etc/packages/[package_name]
 ├── var     -> /usr/local/packages/@appdata/[package_name]
@@ -37,7 +37,7 @@
 
 **目录所有者规则**
 
-- 当默认运行身份为 package 时，FHS 目录设置为 [packageuser]:[packagegroup]
-- 当默认运行身份为 root 时，FHS 目录设置为 root:[packagegroup]
+- 当默认运行身份为 package 时，FHS 目录设置为 `[packageuser]:[packagegroup]`
+- 当默认运行身份为 root 时，FHS 目录设置为 `root:[packagegroup]`
 
 关于默认运行身份的更多信息，请参阅权限部分。
