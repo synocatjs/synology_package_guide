@@ -6,9 +6,9 @@
 
 ---
 
-### 请求
+## 请求
 
-#### 查询参数
+### 查询参数
 
 | 参数 | 类型 | 必需 | 描述 |
 |------|------|------|------|
@@ -28,7 +28,7 @@
 
 ---
 
-#### 请求体
+### 请求体
 
 **Content-Type:** `application/json`
 
@@ -44,7 +44,7 @@
 | `access_time` | integer | ✗ | 最后访问时间（默认值：创建时间） |
 | `created_time` | integer | ✗ | 文件创建时间（默认值：服务器当前时间） |
 
-#### member 对象字段
+### member 对象字段
 
 | 字段 | 类型 | 描述 |
 |------|------|------|
@@ -53,7 +53,7 @@
 | `name` | string | 用户或组的成员名称（优先级高于 uid 和 gid） |
 | `type` | string | 成员类型。有效值：`user`、`group`、`public`、`internal` |
 
-#### 请求示例
+### 请求示例
 
 ```json
 {
@@ -61,7 +61,7 @@
 }
 ```
 
-#### cURL 命令示例
+### cURL 命令示例
 
 ```bash
 curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files?type=folder&path=%2Fmydrive%2Fabc" \
@@ -73,9 +73,9 @@ curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files?type=folder&p
 
 ---
 
-### 响应
+## 响应
 
-#### 成功响应 (200)
+### 成功响应 (200)
 
 响应结构与 [获取元数据] 接口相同，返回新创建的文件或文件夹的完整元数据对象。
 
@@ -85,7 +85,7 @@ curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files?type=folder&p
 | `error.code` | integer | 错误代码（仅在请求失败时返回） |
 | `data` | object | 新创建的文件或文件夹元数据对象 |
 
-#### 响应示例（创建文件夹）
+### 响应示例（创建文件夹）
 
 ```json
 {
@@ -114,7 +114,7 @@ curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files?type=folder&p
 }
 ```
 
-#### 响应示例（创建文件）
+### 响应示例（创建文件）
 
 ```json
 {

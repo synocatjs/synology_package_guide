@@ -6,9 +6,9 @@
 
 ---
 
-### 请求
+## 请求
 
-#### 请求体
+### 请求体
 
 **Content-Type:** `application/json`
 
@@ -19,7 +19,7 @@
 | `to_parent_folder` | string | ✓ | 目标父文件夹路径 |
 | `conflict_action` | enum | ✗ | 当目标文件夹中存在文件名冲突时的回退操作。（默认值：`autorename`）<br>**有效值：** `overwrite`（覆盖）、`autorename`（自动重命名）、`stop`（停止）、`version`（版本）、`skip`（跳过） |
 
-#### 请求示例
+### 请求示例
 
 ```json
 {
@@ -30,7 +30,7 @@
 }
 ```
 
-#### cURL 命令示例
+### cURL 命令示例
 
 ```bash
 curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files/copy" \
@@ -42,9 +42,9 @@ curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files/copy" \
 
 ---
 
-### 响应
+## 响应
 
-#### 成功响应 (200)
+### 成功响应 (200)
 
 | 字段 | 类型 | 描述 |
 |------|------|------|
@@ -52,7 +52,7 @@ curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files/copy" \
 | `error.code` | integer | 错误代码（仅在请求失败时返回） |
 | `data.async_task_id` | string | 异步任务 ID |
 
-#### 响应示例
+### 响应示例
 
 ```json
 {

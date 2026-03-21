@@ -1,14 +1,13 @@
 <!-- _sidebar.md -->
 
 - [一、首页](/)
-  - [1. 简介](README.md)
 
 - [二、开发基础](base/)
   - [1. 开发环境](base/dev-env.md)
   - [2. 开发工具](base/dev-tools.md)
+
 - [三、快速开始](start/)
   - [1. 系统要求](start/requirements.md)
-
 
 - [四、SPK 包介绍](spk_introduction/)
   - [1. INFO 文件介绍](spk_introduction/file_info.md)
@@ -19,7 +18,7 @@
   - [4. wizard ui 文件](spk_introduction/wizard_ui_files.md)
 
 - [五、dsm 集成](synology_dsm_integration/)
-  - [套件文件系统层级标准](synology_dsm_integration/fhs.md)
+  - [1. 套件文件系统层级标准](synology_dsm_integration/fhs.md)
 
 - [六、办公套件 Web API](office_suite_web_api/)
   - [1. Drive](office_suite_web_api/drive/)
@@ -54,7 +53,6 @@
       - [列出权限](office_suite_web_api/drive/file_and_folder_sharing/list_permissions.md)
       - [更新权限](office_suite_web_api/drive/file_and_folder_sharing/update_permissions.md)
     - [团队文件夹](office_suite_web_api/drive/team_folders/)
-      ---
       - [获取团队文件夹](office_suite_web_api/drive/team_folders/get.md)
       - [获取团队成员](office_suite_web_api/drive/team_folders/get_members.md)
     - [文件请求](office_suite_web_api/drive/file_request/)
@@ -146,4 +144,6 @@
       - [获取日历列表](office_suite_web_api/calendar/calendar/list.md)
       - [导出 ICS](office_suite_web_api/calendar/calendar/export.md)
 
-
+- [七、常见问题](common_questions/)
+  - [1. 如何查找 Synology NAS 的 CPU 型号？](common_questions/how_to_find_synology_nas_cpu_model.md)
+  - [2. 如何查找平台和架构表？](common_questions/how_to_find_platform_and_architecture.md)

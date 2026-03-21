@@ -1,11 +1,14 @@
 # 简介
 
+!> 需要提前申请开发者权限： https://office-suite-api.synology.com
+
+
 Synology Office Suite API 为开发者提供了强大的工具，通过 REST API 和 Webhook 支持，实现工作流自动化、提升生产力，并安全地将 Synology 数据与第三方平台集成。Synology API 文档简化了开发流程，提供全面的指南、示例和测试工具，以简化集成并为多样化的业务需求创建定制化、安全的解决方案。本网站除 Synology Spreadsheet 外的所有 API 均需要：
 
 - DSM 7.2.2 nano3 或更高版本
 - Cookie 中的会话 ID（sid）用于身份验证，可通过登录 API 获取
 
-> 注意: 目前暂未更新 MailPlus 的文档，可前往 [MailPlus 官方页面访问](https://office-suite-api.synology.com/Synology-MailPlus/v1)
+!> 注意: 目前暂未更新 MailPlus 的文档，可前往 [MailPlus 官方页面访问](https://office-suite-api.synology.com/Synology-MailPlus/v1)
 
 ---
 

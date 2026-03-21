@@ -6,9 +6,9 @@
 
 ---
 
-### 请求
+## 请求
 
-#### 请求体
+### 请求体
 
 **Content-Type:** `application/json`
 
@@ -17,7 +17,7 @@
 | `permanent` | boolean | ✗ | 是否永久删除文件。（默认值：`false`） |
 | `files` | array | ✓ | 要移动的文件路径数组 |
 
-#### 请求示例
+### 请求示例
 
 ```json
 {
@@ -26,7 +26,7 @@
 }
 ```
 
-#### cURL 命令示例
+### cURL 命令示例
 
 ```bash
 curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files/delete" \
@@ -38,9 +38,9 @@ curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files/delete" \
 
 ---
 
-### 响应
+## 响应
 
-#### 成功响应 (200)
+### 成功响应 (200)
 
 | 字段 | 类型 | 描述 |
 |------|------|------|
@@ -48,7 +48,7 @@ curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files/delete" \
 | `error.code` | integer | 错误代码（仅在请求失败时返回） |
 | `data.async_task_id` | string | 异步任务 ID |
 
-#### 响应示例
+### 响应示例
 
 ```json
 {

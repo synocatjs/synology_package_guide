@@ -6,9 +6,9 @@
 
 ---
 
-### 请求
+## 请求
 
-#### 请求体
+### 请求体
 
 **Content-Type:** `application/json`
 
@@ -18,7 +18,7 @@
 | `account` | string | ✓ | DSM 账户名 |
 | `passwd` | string | ✓ | DSM 密码 |
 
-#### 请求示例
+### 请求示例
 
 ```json
 {
@@ -28,7 +28,7 @@
 }
 ```
 
-#### cURL 命令示例
+### cURL 命令示例
 
 ```bash
 curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/login" \
@@ -39,9 +39,9 @@ curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/login" \
 
 ---
 
-### 响应
+## 响应
 
-#### 成功响应 (200)
+### 成功响应 (200)
 
 | 字段 | 类型 | 描述 |
 |------|------|------|
@@ -50,7 +50,7 @@ curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/login" \
 | `data.sid` | string | 后续 API 调用所需的会话 ID |
 | `error.code` | integer | 错误代码（仅在失败时返回） |
 
-#### 响应示例
+### 响应示例
 
 ```json
 {

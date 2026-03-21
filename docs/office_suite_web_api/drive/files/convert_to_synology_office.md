@@ -1,4 +1,4 @@
-## 转换为 Synology Office
+# 转换为 Synology Office
 
 **POST** `/api/SynologyDrive/default/v2/files/convert-office`
 
@@ -6,9 +6,9 @@
 
 ---
 
-### 请求
+## 请求
 
-#### 请求体
+### 请求体
 
 **Content-Type:** `application/json`
 
@@ -20,7 +20,7 @@
 | `files[].path` | string | ✓ | 文件路径。支持 ID 系统格式 |
 | `files[].password` | string | ✗ | 密码 |
 
-#### ID 系统格式说明
+### ID 系统格式说明
 
 - `link:permanent_link` - 永久链接
 - `id:file_id` - 文件 ID
@@ -30,7 +30,7 @@
 - `/views/{view_id}/{relative-path}` - 视图中的相对路径
 - `/volumes/{absolute-path}` - 卷中的绝对路径
 
-#### 请求示例
+### 请求示例
 
 ```json
 {
@@ -44,7 +44,7 @@
 }
 ```
 
-#### cURL 命令示例
+### cURL 命令示例
 
 ```bash
 curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files/convert-office" \
@@ -56,9 +56,9 @@ curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files/convert-offic
 
 ---
 
-### 响应
+## 响应
 
-#### 成功响应 (200)
+### 成功响应 (200)
 
 | 字段 | 类型 | 描述 |
 |------|------|------|
@@ -66,7 +66,7 @@ curl -X POST "https://{nas_url}/api/SynologyDrive/default/v2/files/convert-offic
 | `error.code` | integer | 错误代码（仅在请求失败时返回） |
 | `data.async_task_id` | string | 异步任务 ID |
 
-#### 响应示例
+### 响应示例
 
 ```json
 {
