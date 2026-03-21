@@ -105,4 +105,39 @@
     ---
     - [获取服务器指标](office_suite_web_api/spreadsheet/statistics/get_metric.md)
     - [获取用户数量](office_suite_web_api/spreadsheet/statistics/get_user_count.md)
+  - [日历表](office_suite_web_api/calendar/)
+    - [登陆](office_suite_web_api/calendar/auth/sign_in.md)
+    - [注销](office_suite_web_api/calendar/auth/revoke.md)
+    ---
+    - [获取时区列表](office_suite_web_api/calendar/timezones/list.md)
+    ---
+    - [获取用户设置](office_suite_web_api/calendar/settings/get.md)
+    - [修改用户设置](office_suite_web_api/calendar/settings/update.md)
+    ---
+    - [获取用户联系人列表](office_suite_web_api/calendar/contacts/list.md)
+    ---
+    - [获取事件](office_suite_web_api/calendar/events/get.md)
+    - [修改事件](office_suite_web_api/calendar/events/update.md)
+    - [创建新事件](office_suite_web_api/calendar/events/create.md)
+    - [删除事件](office_suite_web_api/calendar/events/delete.md)
+    - [修改子事件](office_suite_web_api/calendar/events/update_sub_event.md)
+    - [修改受邀事件提醒](office_suite_web_api/calendar/events/update_invited_reminders.md)
+    - [修改受邀子事件提醒](office_suite_web_api/calendar/events/update_invited_sub_event_reminders.md)
+    - [获取事件列表](office_suite_web_api/calendar/events/list.md)
+    - [设置重复事件例外日期](office_suite_web_api/calendar/events/set_exception_dates.md)
+    - [设置事件的特定属性](office_suite_web_api/calendar/events/set_event_properties.md)
+    ---
+    - [获取任务列表](office_suite_web_api/calendar/tasks/list.md)
+    - [获取任务](office_suite_web_api/calendar/tasks/get.md)
+    - [更新任务](office_suite_web_api/calendar/tasks/update.md)
+    - [创建任务](office_suite_web_api/calendar/tasks/create.md)
+    - [删除任务](office_suite_web_api/calendar/tasks/delete.md)
+    ---
+    - [获取日历信息](office_suite_web_api/calendar/calendar/get.md)
+    - [修改日历](office_suite_web_api/calendar/calendar/update.md)
+    - [创建日历](office_suite_web_api/calendar/calendar/create.md)
+    - [删除日历](office_suite_web_api/calendar/calendar/delete.md)
+    - [获取日历列表](office_suite_web_api/calendar/calendar/list.md)
+    - [导出 ICS](office_suite_web_api/calendar/calendar/export.md)
+
 
