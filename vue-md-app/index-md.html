@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DSM Markdown Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Syne:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.15/vue.global.prod.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <style>
+    /* ===== CSS Variables & Theming ===== */
+    :root {
+      --bg-primary: #0d0f14;
+      --bg-secondary: #13151c;
+      --bg-tertiary: #1a1d27;
+      --bg-hover: #1e2230;
+      --bg-active: #252a3a;
+      --border: #2a2f42;
+      --border-light: #363c54;
+      --text-primary: #e8eaf0;
+      --text-secondary: #8891aa;
+      --text-muted: #555e7a;
+      --accent: #5b8af5;
+      --accent-hover: #7ba3ff;
+      --accent-dim: rgba(91,138,245,0.12);
+      --accent-dim2: rgba(91,138,245,0.06);
+      --green: #4dbb7a;
+      --yellow: #f0c060;
+      --red: #e05c6e;
+      --purple: #a87dfc;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --font-display: 'Syne', sans-serif;
+      --font-prose: 'Lora', Georgia, serif;
+      --sidebar-width: 260px;
+      --toolbar-h: 48px;
+      --statusbar-h: 26px;
+      --radius: 6px;
+      --shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .light {
+      --bg-primary: #f5f6fa;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #eef0f7;
+      --bg-hover: #e8ebf5;
+      --bg-active: #dce0f0;
+      --border: #d4d8eb;
+      --border-light: #bcc1db;
+      --text-primary: #1a1d2e;
+      --text-secondary: #505778;
+      --text-muted: #8891b0;
+      --accent-dim: rgba(91,138,245,0.1);
+      --accent-dim2: rgba(91,138,245,0.05);
+    }
+
+    /* ===== Reset ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: var(--font-display);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 14px;
+      line-height: 1.5;
+      transition: background 0.2s, color 0.2s;
+    }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    input, textarea { font-family: inherit; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+
+    /* ===== App Layout ===== */
+    #app { display: flex; height: 100vh; overflow: hidden; }
+
+    /* ===== Sidebar ===== */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: width 0.25s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+    }
+    .sidebar.collapsed { width: 0; }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      height: var(--toolbar-h);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .logo-icon {
+      width: 28px; height: 28px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .logo-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+    .sidebar-section {
+      padding: 10px 8px 4px;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .sidebar-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 4px 8px;
+    }
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.12s;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .file-item:hover { background: var(--bg-hover); }
+    .file-item.active { background: var(--accent-dim); color: var(--accent); }
+    .file-item-icon { flex-shrink: 0; opacity: 0.7; }
+    .file-item-name { flex: 1; overflow: hidden; text-overflow: ellipsis; font-size: 13px; }
+    .file-item-modified { font-size: 10px; color: var(--text-muted); flex-shrink: 0; }
+    .sidebar-new-btn {
+      margin: 4px 8px 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: var(--radius);
+      color: var(--text-secondary);
+      font-size: 13px;
+      transition: background 0.12s, color 0.12s;
+      border: 1px dashed var(--border);
+    }
+    .sidebar-new-btn:hover { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+
+    /* ===== Main Area ===== */
+    .main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+    /* ===== Toolbar ===== */
+    .toolbar {
+      height: var(--toolbar-h);
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 0 8px;
+      flex-shrink: 0;
+    }
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 1px;
+      padding: 0 4px;
+    }
+    .toolbar-group + .toolbar-group { border-left: 1px solid var(--border); }
+    .toolbar-btn {
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 5px;
+      color: var(--text-secondary);
+      transition: background 0.12s, color 0.12s;
+      font-size: 13px;
+      position: relative;
+    }
+    .toolbar-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .toolbar-btn.active { background: var(--accent-dim); color: var(--accent); }
+    .toolbar-title {
+      flex: 1;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 8px;
+    }
+    .toolbar-title span { color: var(--yellow); margin-left: 4px; }
+    .toolbar-spacer { flex: 1; }
+    .view-mode-btns {
+      display: flex;
+      background: var(--bg-tertiary);
+      border-radius: 6px;
+      padding: 2px;
+      gap: 1px;
+    }
+    .view-btn {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: background 0.12s, color 0.12s;
+    }
+    .view-btn.active { background: var(--bg-secondary); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+
+    /* ===== Editor Container ===== */
+    .editor-container {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+    .editor-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0;
+    }
+    .editor-pane + .editor-pane {
+      border-left: 1px solid var(--border);
+    }
+
+    /* ===== Code Editor ===== */
+    .code-editor-wrap {
+      flex: 1;
+      display: flex;
+      overflow: auto;
+      padding: 16px 0;
+      background: var(--bg-primary);
+    }
+    .line-numbers {
+      flex-shrink: 0;
+      padding: 0 12px 0 16px;
+      text-align: right;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      user-select: none;
+      min-width: 48px;
+    }
+    .code-textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.7;
+      padding: 0 24px 0 0;
+      caret-color: var(--accent);
+      tab-size: 2;
+      white-space: pre;
+      overflow: visible;
+    }
+    .code-textarea::selection { background: rgba(91,138,245,0.25); }
+    .code-textarea::placeholder { color: var(--text-muted); }
+
+    /* ===== Preview Pane ===== */
+    .preview-pane {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px 48px;
+      background: var(--bg-primary);
+    }
+    .preview-content {
+      max-width: 720px;
+      margin: 0 auto;
+      font-family: var(--font-prose);
+    }
+
+    /* ===== Markdown Preview Typography ===== */
+    .preview-content h1, .preview-content h2, .preview-content h3,
+    .preview-content h4, .preview-content h5, .preview-content h6 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text-primary);
+      margin-top: 1.8em;
+      margin-bottom: 0.6em;
+    }
+    .preview-content h1 { font-size: 2em; font-weight: 800; border-bottom: 2px solid var(--border); padding-bottom: 0.3em; margin-top: 0; }
+    .preview-content h2 { font-size: 1.5em; }
+    .preview-content h3 { font-size: 1.2em; }
+    .preview-content p { margin-bottom: 1.1em; line-height: 1.8; color: var(--text-secondary); font-size: 15px; }
+    .preview-content a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
+    .preview-content a:hover { border-color: var(--accent); }
+    .preview-content code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--bg-tertiary);
+      color: var(--purple);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    .preview-content pre {
+      background: var(--bg-secondary) !important;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin-bottom: 1.2em;
+    }
+    .preview-content pre code { background: none; border: none; padding: 0; color: inherit; font-size: 13px; }
+    .preview-content blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 8px 16px;
+      background: var(--accent-dim2);
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 1.2em;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+    .preview-content ul, .preview-content ol { padding-left: 24px; margin-bottom: 1.1em; }
+    .preview-content li { margin-bottom: 4px; color: var(--text-secondary); line-height: 1.7; font-size: 15px; }
+    .preview-content table { width: 100%; border-collapse: collapse; margin-bottom: 1.2em; font-size: 14px; }
+    .preview-content th {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      text-align: left;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+    .preview-content td { border: 1px solid var(--border); padding: 8px 12px; }
+    .preview-content tr:hover td { background: var(--bg-hover); }
+    .preview-content img { max-width: 100%; border-radius: 8px; box-shadow: var(--shadow); margin: 8px 0; }
+    .preview-content hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+    .preview-content input[type="checkbox"] { margin-right: 6px; accent-color: var(--accent); }
+
+    /* ===== Status Bar ===== */
+    .statusbar {
+      height: var(--statusbar-h);
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 16px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      flex-shrink: 0;
+      letter-spacing: 0.2px;
+    }
+    .statusbar-item { display: flex; align-items: center; gap: 5px; }
+    .statusbar-sep { opacity: 0.4; }
+    .statusbar-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.9); }
+    .status-dot.saved { background: #4dff9a; }
+    .status-dot.unsaved { background: var(--yellow); }
+
+    /* ===== Command Palette ===== */
+    .cmd-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 120px;
+      animation: fadeIn 0.1s ease;
+    }
+    .cmd-palette {
+      width: 560px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      overflow: hidden;
+      animation: slideDown 0.15s cubic-bezier(0.4,0,0.2,1);
+    }
+    .cmd-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cmd-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      color: var(--text-primary);
+      font-family: var(--font-display);
+    }
+    .cmd-input::placeholder { color: var(--text-muted); }
+    .cmd-list { max-height: 320px; overflow-y: auto; padding: 8px; }
+    .cmd-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .cmd-item:hover, .cmd-item.focused { background: var(--bg-hover); }
+    .cmd-item-icon { color: var(--text-muted); flex-shrink: 0; }
+    .cmd-item-label { flex: 1; font-size: 13.5px; }
+    .cmd-item-kbd {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+
+    /* ===== Tooltip ===== */
+    .tooltip-wrap { position: relative; display: flex; }
+    .tooltip-wrap:hover .tooltip-box { opacity: 1; pointer-events: none; transform: translateY(0); }
+    .tooltip-box {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-4px);
+      background: var(--bg-active);
+      border: 1px solid var(--border-light);
+      color: var(--text-primary);
+      font-size: 11.5px;
+      padding: 4px 9px;
+      border-radius: 5px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.15s, transform 0.15s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* ===== Animations ===== */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    /* ===== File rename input ===== */
+    .file-rename { background: var(--bg-active); border: 1px solid var(--accent); border-radius: 4px; color: var(--text-primary); font-size: 13px; padding: 2px 6px; width: 100%; outline: none; font-family: var(--font-display); }
+
+    /* ===== Drag & Drop ===== */
+    .drop-overlay {
+      position: absolute; inset: 0;
+      background: rgba(91,138,245,0.1);
+      border: 2px dashed var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 50;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      gap: 12px;
+    }
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 12px;
+      color: var(--text-muted);
+    }
+    .empty-state-icon { opacity: 0.3; }
+    .empty-state-title { font-size: 16px; font-weight: 700; color: var(--text-secondary); }
+    .empty-state-sub { font-size: 13px; }
+
+    /* ===== Focus mode ===== */
+    .focus-mode .sidebar { width: 0; }
+    .focus-mode .toolbar { opacity: 0; pointer-events: none; height: 0; }
+    .focus-mode .statusbar { opacity: 0; }
+    .focus-mode .preview-pane { padding: 64px max(10%, 80px); }
+    .focus-mode .code-editor-wrap { padding: 32px max(8%, 64px); }
+
+    /* ===== Resizer ===== */
+    .resizer {
+      width: 4px;
+      cursor: col-resize;
+      background: transparent;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .resizer:hover, .resizer.dragging { background: var(--accent); }
+
+    /* ===== Search panel ===== */
+    .search-panel {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .search-input {
+      flex: 1;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 5px 10px;
+      color: var(--text-primary);
+      font-size: 13px;
+      outline: none;
+      font-family: var(--font-mono);
+    }
+    .search-input:focus { border-color: var(--accent); }
+    .search-count { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" :class="{collapsed: !sidebarOpen}" @dragover.prevent @drop.prevent="onFileDrop">
+    <div class="sidebar-logo">
+      <div class="logo-icon">M↓</div>
+      <span class="logo-title">MD Editor</span>
+    </div>
+    <div style="padding:8px 8px 4px">
+      <button class="sidebar-new-btn" @click="newFile" style="width:100%">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        新建文档
+      </button>
+    </div>
+    <div class="sidebar-section">文档列表 ({{files.length}})</div>
+    <div class="sidebar-body">
+      <div v-if="files.length === 0" style="padding:16px 12px;color:var(--text-muted);font-size:12px;">暂无文档，点击上方新建</div>
+      <div
+        v-for="file in files" :key="file.id"
+        class="file-item" :class="{active: currentFileId === file.id}"
+        @click="openFile(file.id)"
+        @dblclick="startRename(file.id)"
+        :title="file.name"
+      >
+        <svg class="file-item-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span v-if="renamingId !== file.id" class="file-item-name">{{file.name}}</span>
+        <input v-else class="file-rename" :value="file.name" @blur="finishRename(file.id, $event.target.value)" @keydown.enter="finishRename(file.id, $event.target.value)" @keydown.esc="renamingId=null" autofocus />
+        <span class="file-item-modified">{{formatTime(file.modified)}}</span>
+        <button @click.stop="deleteFile(file.id)" style="color:var(--text-muted);opacity:0;transition:opacity 0.1s;flex-shrink:0" class="file-del-btn" title="删除">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Area -->
+  <div class="main-area" :class="{'focus-mode': focusMode}">
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <!-- Sidebar Toggle -->
+      <div class="toolbar-group">
+        <div class="tooltip-wrap">
+          <button class="toolbar-btn" :class="{active:sidebarOpen}" @click="sidebarOpen=!sidebarOpen" title="">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+          </button>
+          <span class="tooltip-box">侧边栏</span>
+        </div>
+      </div>
+
+      <!-- Format Buttons -->
+      <div class="toolbar-group" v-if="currentFile">
+        <div class="tooltip-wrap" v-for="btn in formatButtons" :key="btn.label">
+          <button class="toolbar-btn" @click="insertFormat(btn.before, btn.after, btn.placeholder)" :title="btn.label">
+            <span v-html="btn.icon"></span>
+          </button>
+          <span class="tooltip-box">{{btn.label}} {{btn.kbd}}</span>
+        </div>
+      </div>
+
+      <!-- Insert Buttons -->
+      <div class="toolbar-group" v-if="currentFile">
+        <div class="tooltip-wrap" v-for="btn in insertButtons" :key="btn.label">
+          <button class="toolbar-btn" @click="btn.action()">
+            <span v-html="btn.icon"></span>
+          </button>
+          <span class="tooltip-box">{{btn.label}}</span>
+        </div>
+      </div>
+
+      <div class="toolbar-title" v-if="currentFile">
+        {{currentFile.name}}<span v-if="!currentFile.saved">●</span>
+      </div>
+      <div class="toolbar-spacer" v-else></div>
+
+      <!-- Actions -->
+      <div class="toolbar-group">
+        <div class="tooltip-wrap">
+          <button class="toolbar-btn" @click="toggleSearch" :class="{active:showSearch}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+          <span class="tooltip-box">查找 (Ctrl+F)</span>
+        </div>
+        <div class="tooltip-wrap">
+          <button class="toolbar-btn" @click="saveFile" :disabled="!currentFile">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          </button>
+          <span class="tooltip-box">保存 (Ctrl+S)</span>
+        </div>
+        <div class="tooltip-wrap">
+          <button class="toolbar-btn" @click="exportMd" :disabled="!currentFile">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+          <span class="tooltip-box">导出 Markdown</span>
+        </div>
+        <div class="tooltip-wrap">
+          <button class="toolbar-btn" @click="exportHtml" :disabled="!currentFile">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </button>
+          <span class="tooltip-box">导出 HTML</span>
+        </div>
+      </div>
+
+      <div class="toolbar-group">
+        <div class="tooltip-wrap">
+          <button class="toolbar-btn" @click="focusMode=!focusMode" :class="{active:focusMode}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+          </button>
+          <span class="tooltip-box">专注模式 (F11)</span>
+        </div>
+        <div class="tooltip-wrap">
+          <button class="toolbar-btn" @click="toggleTheme">
+            <svg v-if="isDark" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg v-else width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          </button>
+          <span class="tooltip-box">切换主题</span>
+        </div>
+        <div class="tooltip-wrap">
+          <button class="toolbar-btn" @click="showCmd=true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          </button>
+          <span class="tooltip-box">命令面板 (Ctrl+P)</span>
+        </div>
+      </div>
+
+      <!-- View Mode -->
+      <div class="toolbar-group">
+        <div class="view-mode-btns">
+          <button class="view-btn" :class="{active:viewMode==='edit'}" @click="viewMode='edit'">编辑</button>
+          <button class="view-btn" :class="{active:viewMode==='split'}" @click="viewMode='split'">分栏</button>
+          <button class="view-btn" :class="{active:viewMode==='preview'}" @click="viewMode='preview'">预览</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-panel" v-if="showSearch && currentFile">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-input" v-model="searchQuery" placeholder="查找内容..." @keydown.esc="showSearch=false" ref="searchInputEl" />
+      <span class="search-count" v-if="searchQuery">{{searchCount}} 处匹配</span>
+      <button class="toolbar-btn" style="width:26px;height:26px" @click="showSearch=false">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Editor Area -->
+    <div class="editor-container" @dragover.prevent="isDragging=true" @dragleave="isDragging=false" @drop.prevent="handleDrop">
+      <div class="drop-overlay" v-if="isDragging">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        拖拽 Markdown 文件至此
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" v-if="!currentFile">
+        <div class="empty-state-icon">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="empty-state-title">DSM Markdown Editor</div>
+        <div class="empty-state-sub">新建文档或拖入 .md 文件开始编辑</div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button @click="newFile" style="padding:7px 16px;background:var(--accent);color:white;border-radius:6px;font-size:13px;font-weight:600;font-family:var(--font-display)">新建文档</button>
+          <button @click="showCmd=true" style="padding:7px 16px;background:var(--bg-tertiary);color:var(--text-secondary);border-radius:6px;font-size:13px;border:1px solid var(--border);font-family:var(--font-display)">命令面板</button>
+        </div>
+      </div>
+
+      <!-- Edit Pane -->
+      <div class="editor-pane" v-if="currentFile && viewMode !== 'preview'" :style="viewMode==='split' ? 'flex:1' : 'flex:1'">
+        <div class="code-editor-wrap" ref="editorWrap">
+          <div class="line-numbers" aria-hidden="true">
+            <div v-for="n in lineCount" :key="n">{{n}}</div>
+          </div>
+          <textarea
+            class="code-textarea"
+            ref="textarea"
+            v-model="currentFile.content"
+            @input="onInput"
+            @keydown="onKeydown"
+            @scroll="syncScroll"
+            placeholder="在此输入 Markdown..."
+            spellcheck="false"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Resizer -->
+      <div class="resizer" v-if="currentFile && viewMode==='split'" ref="resizerEl" @mousedown="startResize"></div>
+
+      <!-- Preview Pane -->
+      <div class="preview-pane" v-if="currentFile && viewMode !== 'edit'" :style="viewMode==='split' ? `flex:${previewFlex}` : 'flex:1'" ref="previewEl">
+        <div class="preview-content" v-html="renderedHtml"></div>
+      </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="statusbar">
+      <div class="statusbar-item">
+        <div class="status-dot" :class="currentFile?.saved ? 'saved' : 'unsaved'"></div>
+        <span>{{currentFile ? (currentFile.saved ? '已保存' : '未保存') : '无文档'}}</span>
+      </div>
+      <span class="statusbar-sep">|</span>
+      <div class="statusbar-item" v-if="currentFile">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+        {{lineCount}} 行
+      </div>
+      <div class="statusbar-item" v-if="currentFile">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+        {{wordCount}} 字
+      </div>
+      <div class="statusbar-item" v-if="currentFile">
+        <span>{{charCount}} 字符</span>
+      </div>
+      <div class="statusbar-right">
+        <div class="statusbar-item">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          {{readingTime}} 分钟阅读
+        </div>
+        <div class="statusbar-item">DSM 7 · Markdown · UTF-8</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Command Palette -->
+  <div class="cmd-overlay" v-if="showCmd" @click.self="showCmd=false">
+    <div class="cmd-palette">
+      <div class="cmd-input-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        <input class="cmd-input" v-model="cmdQuery" placeholder="输入命令..." ref="cmdInputEl" @keydown.esc="showCmd=false" @keydown.enter="runFocusedCmd" @keydown.up.prevent="moveFocus(-1)" @keydown.down.prevent="moveFocus(1)" />
+      </div>
+      <div class="cmd-list">
+        <div
+          v-for="(cmd, i) in filteredCmds" :key="cmd.id"
+          class="cmd-item" :class="{focused: i===cmdFocus}"
+          @click="runCmd(cmd)"
+          @mouseenter="cmdFocus=i"
+        >
+          <span class="cmd-item-icon" v-html="cmd.icon"></span>
+          <span class="cmd-item-label">{{cmd.label}}</span>
+          <span class="cmd-item-kbd" v-if="cmd.kbd">{{cmd.kbd}}</span>
+        </div>
+        <div v-if="filteredCmds.length===0" style="padding:16px;text-align:center;color:var(--text-muted);font-size:13px">无匹配命令</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const { createApp, ref, computed, watch, nextTick, onMounted, onUnmounted } = Vue;
+
+const STORAGE_KEY = 'dsm-md-editor-files';
+const SETTINGS_KEY = 'dsm-md-editor-settings';
+
+// SVG icons (inline)
+const icons = {
+  bold: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 4h8a4 4 0 010 8H6z"/><path d="M6 12h9a4 4 0 010 8H6z"/></svg>`,
+  italic: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>`,
+  strike: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.3 12H6.7"/><path d="M10 6C8.3 6 7 7.1 7 8.5c0 .5.2 1 .5 1.5"/><path d="M14 18c1.7 0 3-1.1 3-2.5 0-.5-.2-1-.5-1.5"/></svg>`,
+  h1: `<span style="font-weight:800;font-size:12px;font-family:var(--font-display)">H1</span>`,
+  h2: `<span style="font-weight:700;font-size:11px;font-family:var(--font-display)">H2</span>`,
+  h3: `<span style="font-weight:700;font-size:10px;font-family:var(--font-display)">H3</span>`,
+  ul: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
+  ol: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1.5"/></svg>`,
+  code: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+  link: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>`,
+  img: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
+  quote: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>`,
+  table: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="12" y1="3" x2="12" y2="21"/></svg>`,
+  hr: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+  new: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>`,
+  save: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`,
+  search: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+  download: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
+  sun: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>`,
+  focus: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>`,
+  trash: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>`,
+  edit: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+};
+
+const SAMPLE_MD = `# DSM Markdown Editor
+
+欢迎使用基于 **Synology DSM 7** 开发手册构建的 Markdown 编辑器！
+
+## ✨ 功能特性
+
+- 🖊️ **实时预览** — 分栏/纯编辑/纯预览三种模式
+- 💾 **本地持久化** — 文档自动保存至 localStorage
+- 🌓 **明暗主题** — 一键切换
+- ⌨️ **命令面板** — \`Ctrl+P\` 快速访问所有功能
+- 📤 **导出** — 支持 .md 和 .html 格式导出
+- 🔍 **全文搜索** — \`Ctrl+F\` 查找文本
+- 🖱️ **拖拽上传** — 直接拖入 .md 文件
+- 📐 **专注模式** — \`F11\` 沉浸式写作
+
+## DSM 包结构
+
+\`\`\`
+MarkdownEditor/
+├── INFO           # 包元信息 (package, version, arch...)
+├── PACKAGE_ICON.PNG (64×64)
+├── package.tgz    # 应用主体
+│   └── ui/        # dsmuidir 指向此目录
+│       ├── config
+│       └── index.html
+├── conf/
+│   ├── privilege  # run-as: package
+│   └── resource   # port, web-service
+├── scripts/
+│   ├── start
+│   ├── stop
+│   └── postinst
+└── wizard/
+    └── install.conf
+\`\`\`
+
+## 快捷键参考
+
+| 操作 | Windows/Linux | macOS |
+|------|--------------|-------|
+| 保存 | \`Ctrl+S\` | \`⌘S\` |
+| 命令面板 | \`Ctrl+P\` | \`⌘P\` |
+| 查找 | \`Ctrl+F\` | \`⌘F\` |
+| 加粗 | \`Ctrl+B\` | \`⌘B\` |
+| 斜体 | \`Ctrl+I\` | \`⌘I\` |
+| 专注模式 | \`F11\` | \`F11\` |
+| Tab缩进 | \`Tab\` | \`Tab\` |
+
+## 代码高亮示例
+
+\`\`\`typescript
+// DSM Package INFO 配置接口
+interface DSMPackageInfo {
+  package: string;      // 包名
+  version: string;      // 版本号 e.g. "1.0.0-0001"
+  os_min_ver: string;   // 最低 DSM 版本 >= "7.0-40000"
+  description: string;
+  arch: string;         // 目标架构
+  maintainer: string;
+  dsmuidir: string;     // UI 目录映射
+}
+\`\`\`
+
+> **注意**: 根据 DSM 7 破坏性变更，所有包必须在 \`conf/privilege\` 中以 \`run-as: package\` 运行，不得使用 \`run-as: system\`。
+
+---
+
+*基于 Vue 3 + TypeScript + Tailwind CSS + Lucide 构建，遵循 Synology DSM 7 包开发规范。*
+`;
+
+createApp({
+  setup() {
+    // ===== State =====
+    const files = ref([]);
+    const currentFileId = ref(null);
+    const viewMode = ref('split');
+    const sidebarOpen = ref(true);
+    const isDark = ref(true);
+    const focusMode = ref(false);
+    const showCmd = ref(false);
+    const showSearch = ref(false);
+    const searchQuery = ref('');
+    const cmdQuery = ref('');
+    const cmdFocus = ref(0);
+    const renamingId = ref(null);
+    const isDragging = ref(false);
+    const previewFlex = ref(1);
+    const isResizing = ref(false);
+    const textarea = ref(null);
+    const previewEl = ref(null);
+    const cmdInputEl = ref(null);
+    const searchInputEl = ref(null);
+    const editorWrap = ref(null);
+    const resizerEl = ref(null);
+
+    // ===== Computed =====
+    const currentFile = computed(() => files.value.find(f => f.id === currentFileId.value) || null);
+    const lineCount = computed(() => {
+      if (!currentFile.value) return 0;
+      return currentFile.value.content.split('\n').length;
+    });
+    const wordCount = computed(() => {
+      if (!currentFile.value) return 0;
+      return currentFile.value.content.replace(/\s+/g, ' ').trim().split(' ').filter(Boolean).length;
+    });
+    const charCount = computed(() => currentFile.value?.content.length || 0);
+    const readingTime = computed(() => Math.max(1, Math.ceil(wordCount.value / 200)));
+    const searchCount = computed(() => {
+      if (!searchQuery.value || !currentFile.value) return 0;
+      const re = new RegExp(searchQuery.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+      return (currentFile.value.content.match(re) || []).length;
+    });
+
+    const renderedHtml = computed(() => {
+      if (!currentFile.value) return '';
+      try {
+        marked.setOptions({ breaks: true, gfm: true });
+        let html = marked.parse(currentFile.value.content);
+        // Highlight search matches
+        if (searchQuery.value) {
+          const re = new RegExp(`(${searchQuery.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+          html = html.replace(re, '<mark style="background:rgba(91,138,245,0.35);color:inherit;border-radius:2px;padding:0 2px">$1</mark>');
+        }
+        return html;
+      } catch { return '<p style="color:var(--red)">渲染错误</p>'; }
+    });
+
+    // ===== Format Buttons =====
+    const formatButtons = [
+      { label:'加粗', kbd:'Ctrl+B', before:'**', after:'**', placeholder:'粗体文字', icon: icons.bold },
+      { label:'斜体', kbd:'Ctrl+I', before:'*', after:'*', placeholder:'斜体文字', icon: icons.italic },
+      { label:'删除线', kbd:'', before:'~~', after:'~~', placeholder:'删除文字', icon: icons.strike },
+      { label:'一级标题', kbd:'', before:'# ', after:'', placeholder:'标题', icon: icons.h1 },
+      { label:'二级标题', kbd:'', before:'## ', after:'', placeholder:'标题', icon: icons.h2 },
+      { label:'三级标题', kbd:'', before:'### ', after:'', placeholder:'标题', icon: icons.h3 },
+      { label:'无序列表', kbd:'', before:'- ', after:'', placeholder:'列表项', icon: icons.ul },
+      { label:'有序列表', kbd:'', before:'1. ', after:'', placeholder:'列表项', icon: icons.ol },
+      { label:'引用', kbd:'', before:'> ', after:'', placeholder:'引用内容', icon: icons.quote },
+      { label:'行内代码', kbd:'', before:'`', after:'`', placeholder:'代码', icon: icons.code },
+    ];
+
+    const insertButtons = [
+      { label:'插入链接', icon: icons.link, action: () => insertFormat('[', '](https://)', '链接文字') },
+      { label:'插入图片', icon: icons.img, action: () => insertFormat('![', '](https://)', '图片描述') },
+      { label:'插入表格', icon: icons.table, action: insertTable },
+      { label:'分隔线', icon: icons.hr, action: () => insertRaw('\n\n---\n\n') },
+    ];
+
+    // ===== Commands =====
+    const allCmds = computed(() => [
+      { id:'new', label:'新建文档', icon: icons.new, kbd:'Ctrl+N', action: newFile },
+      { id:'save', label:'保存文档', icon: icons.save, kbd:'Ctrl+S', action: saveFile },
+      { id:'search', label:'查找文本', icon: icons.search, kbd:'Ctrl+F', action: () => { showSearch.value=true; nextTick(()=>searchInputEl.value?.focus()); } },
+      { id:'expMd', label:'导出 Markdown (.md)', icon: icons.download, action: exportMd },
+      { id:'expHtml', label:'导出 HTML (.html)', icon: icons.download, action: exportHtml },
+      { id:'theme', label:'切换主题 (明/暗)', icon: icons.sun, action: toggleTheme },
+      { id:'focus', label:'专注模式', icon: icons.focus, kbd:'F11', action: () => focusMode.value=!focusMode.value },
+      { id:'split', label:'切换分栏视图', icon: icons.edit, action: () => viewMode.value='split' },
+      { id:'edit', label:'切换编辑视图', icon: icons.edit, action: () => viewMode.value='edit' },
+      { id:'preview', label:'切换预览视图', icon: icons.edit, action: () => viewMode.value='preview' },
+      { id:'sidebar', label:'切换侧边栏', action: () => sidebarOpen.value=!sidebarOpen.value, icon: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>` },
+      { id:'del', label:'删除当前文档', icon: icons.trash, action: () => currentFile.value && deleteFile(currentFile.value.id) },
+    ]);
+    const filteredCmds = computed(() => {
+      const q = cmdQuery.value.toLowerCase();
+      return q ? allCmds.value.filter(c => c.label.toLowerCase().includes(q)) : allCmds.value;
+    });
+
+    // ===== File Management =====
+    function createFileObj(name = '新文档.md', content = '') {
+      return { id: Date.now() + Math.random(), name, content, saved: true, modified: new Date().toISOString() };
+    }
+
+    function newFile() {
+      const f = createFileObj();
+      f.content = '';
+      f.saved = false;
+      files.value.unshift(f);
+      currentFileId.value = f.id;
+      showCmd.value = false;
+      nextTick(() => { textarea.value?.focus(); startRename(f.id); });
+    }
+
+    function openFile(id) {
+      currentFileId.value = id;
+    }
+
+    function deleteFile(id) {
+      if (!confirm('确认删除此文档？')) return;
+      const idx = files.value.findIndex(f => f.id === id);
+      files.value.splice(idx, 1);
+      if (currentFileId.value === id) {
+        currentFileId.value = files.value[0]?.id || null;
+      }
+      persist();
+    }
+
+    function saveFile() {
+      if (!currentFile.value) return;
+      currentFile.value.saved = true;
+      currentFile.value.modified = new Date().toISOString();
+      persist();
+      showCmd.value = false;
+    }
+
+    const renamingId2 = ref(null);
+    function startRename(id) {
+      renamingId.value = id;
+      nextTick(() => {
+        const el = document.querySelector('.file-rename');
+        if (el) { el.select(); el.focus(); }
+      });
+    }
+
+    function finishRename(id, name) {
+      const f = files.value.find(f => f.id === id);
+      if (f && name.trim()) {
+        f.name = name.trim().endsWith('.md') ? name.trim() : name.trim() + '.md';
+        f.modified = new Date().toISOString();
+      }
+      renamingId.value = null;
+      persist();
+    }
+
+    function onInput() {
+      if (currentFile.value) {
+        currentFile.value.saved = false;
+        currentFile.value.modified = new Date().toISOString();
+        autoSaveDebounce();
+      }
+    }
+
+    let autoSaveTimer = null;
+    function autoSaveDebounce() {
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(saveFile, 2000);
+    }
+
+    // ===== Persistence =====
+    function persist() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(files.value));
+      } catch(e) { console.warn('Storage failed', e); }
+    }
+
+    function loadFromStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          files.value = JSON.parse(raw);
+          if (files.value.length > 0) currentFileId.value = files.value[0].id;
+        } else {
+          const welcome = createFileObj('欢迎使用.md', SAMPLE_MD);
+          files.value = [welcome];
+          currentFileId.value = welcome.id;
+          persist();
+        }
+      } catch { files.value = []; }
+    }
+
+    // ===== Editor Operations =====
+    function insertFormat(before, after, placeholder) {
+      const ta = textarea.value;
+      if (!ta || !currentFile.value) return;
+      const start = ta.selectionStart, end = ta.selectionEnd;
+      const selected = currentFile.value.content.slice(start, end) || placeholder;
+      const newText = before + selected + after;
+      currentFile.value.content = currentFile.value.content.slice(0, start) + newText + currentFile.value.content.slice(end);
+      currentFile.value.saved = false;
+      nextTick(() => {
+        ta.focus();
+        const newPos = start + before.length + selected.length;
+        ta.setSelectionRange(start + before.length, start + before.length + selected.length);
+      });
+      autoSaveDebounce();
+    }
+
+    function insertRaw(text) {
+      const ta = textarea.value;
+      if (!ta || !currentFile.value) return;
+      const pos = ta.selectionStart;
+      currentFile.value.content = currentFile.value.content.slice(0, pos) + text + currentFile.value.content.slice(pos);
+      currentFile.value.saved = false;
+      nextTick(() => { ta.focus(); ta.setSelectionRange(pos + text.length, pos + text.length); });
+      autoSaveDebounce();
+    }
+
+    function insertTable() {
+      insertRaw('\n\n| 列1 | 列2 | 列3 |\n|-----|-----|-----|\n| 数据 | 数据 | 数据 |\n\n');
+    }
+
+    function onKeydown(e) {
+      if (!currentFile.value) return;
+      const ta = textarea.value;
+      // Tab
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const pos = ta.selectionStart;
+        insertRaw('  ');
+        return;
+      }
+      // Enter - auto continue list
+      if (e.key === 'Enter') {
+        const lines = currentFile.value.content.slice(0, ta.selectionStart).split('\n');
+        const lastLine = lines[lines.length - 1];
+        const listMatch = lastLine.match(/^(\s*)([-*+]|\d+\.)\s/);
+        if (listMatch) {
+          e.preventDefault();
+          if (lastLine.trim() === listMatch[0].trim()) {
+            // Empty list item — break out
+            const pos = ta.selectionStart;
+            const before = currentFile.value.content.slice(0, pos - lastLine.length);
+            const after = currentFile.value.content.slice(pos);
+            currentFile.value.content = before + '\n' + after;
+            nextTick(() => ta.setSelectionRange(before.length + 1, before.length + 1));
+          } else {
+            let next = listMatch[1];
+            if (listMatch[2].match(/\d+\./)) {
+              next += (parseInt(listMatch[2]) + 1) + '. ';
+            } else {
+              next += listMatch[2] + ' ';
+            }
+            insertRaw('\n' + next);
+          }
+          autoSaveDebounce();
+          return;
+        }
+      }
+      // Shortcuts
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === 's') { e.preventDefault(); saveFile(); }
+        if (e.key === 'b') { e.preventDefault(); insertFormat('**', '**', '粗体'); }
+        if (e.key === 'i') { e.preventDefault(); insertFormat('*', '*', '斜体'); }
+        if (e.key === 'f') { e.preventDefault(); toggleSearch(); }
+        if (e.key === 'p') { e.preventDefault(); showCmd.value = true; }
+        if (e.key === 'n') { e.preventDefault(); newFile(); }
+        if (e.key === 'z' && !e.shiftKey) { /* native */ }
+      }
+      if (e.key === 'F11') { e.preventDefault(); focusMode.value = !focusMode.value; }
+    }
+
+    function toggleSearch() {
+      showSearch.value = !showSearch.value;
+      if (showSearch.value) nextTick(() => searchInputEl.value?.focus());
+    }
+
+    // ===== Export =====
+    function exportMd() {
+      if (!currentFile.value) return;
+      const blob = new Blob([currentFile.value.content], { type: 'text/markdown;charset=utf-8' });
+      download(blob, currentFile.value.name);
+      showCmd.value = false;
+    }
+
+    function exportHtml() {
+      if (!currentFile.value) return;
+      const html = `<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>${currentFile.value.name}</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 800px; margin: 40px auto; padding: 0 24px; line-height: 1.7; color: #1a1d2e; }
+  code { background: #f0f2f8; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+  pre { background: #f5f6fa; padding: 16px; border-radius: 8px; overflow-x: auto; }
+  blockquote { border-left: 3px solid #5b8af5; padding: 8px 16px; background: #f0f3ff; margin: 0; }
+  table { border-collapse: collapse; width: 100%; } th,td { border: 1px solid #d4d8eb; padding: 8px 12px; }
+</style>
+</head>
+<body>
+${renderedHtml.value}
+</body>
+</html>`;
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      download(blob, currentFile.value.name.replace(/\.md$/, '.html'));
+      showCmd.value = false;
+    }
+
+    function download(blob, name) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ===== Drag & Drop =====
+    function handleDrop(e) {
+      isDragging.value = false;
+      const file = e.dataTransfer?.files?.[0];
+      if (!file) return;
+      if (!file.name.endsWith('.md') && !file.name.endsWith('.txt') && file.type !== 'text/markdown') {
+        alert('请拖入 .md 或 .txt 文件');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const f = createFileObj(file.name, ev.target.result);
+        files.value.unshift(f);
+        currentFileId.value = f.id;
+        persist();
+      };
+      reader.readAsText(file);
+    }
+
+    function onFileDrop(e) {
+      handleDrop(e);
+    }
+
+    // ===== Theme =====
+    function toggleTheme() {
+      isDark.value = !isDark.value;
+      document.documentElement.classList.toggle('dark', isDark.value);
+      document.documentElement.classList.toggle('light', !isDark.value);
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify({ dark: isDark.value }));
+      showCmd.value = false;
+    }
+
+    // ===== Command Palette =====
+    function moveFocus(dir) {
+      cmdFocus.value = (cmdFocus.value + dir + filteredCmds.value.length) % filteredCmds.value.length;
+    }
+    function runFocusedCmd() {
+      const cmd = filteredCmds.value[cmdFocus.value];
+      if (cmd) runCmd(cmd);
+    }
+    function runCmd(cmd) {
+      showCmd.value = false;
+      cmdQuery.value = '';
+      cmdFocus.value = 0;
+      nextTick(() => cmd.action());
+    }
+
+    // ===== Resize =====
+    function startResize(e) {
+      isResizing.value = true;
+      document.addEventListener('mousemove', onResize);
+      document.addEventListener('mouseup', stopResize);
+    }
+    function onResize(e) {
+      if (!isResizing.value) return;
+      // simplified
+    }
+    function stopResize() {
+      isResizing.value = false;
+      document.removeEventListener('mousemove', onResize);
+      document.removeEventListener('mouseup', stopResize);
+    }
+
+    // ===== Utilities =====
+    function formatTime(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      const now = new Date();
+      const diff = (now - d) / 1000;
+      if (diff < 60) return '刚刚';
+      if (diff < 3600) return Math.floor(diff/60) + '分前';
+      if (diff < 86400) return Math.floor(diff/3600) + '时前';
+      return d.toLocaleDateString('zh');
+    }
+
+    function syncScroll() { /* optional sync */ }
+
+    // ===== Watchers =====
+    watch(showCmd, async (v) => {
+      if (v) { await nextTick(); cmdInputEl.value?.focus(); }
+    });
+    watch(files, () => persist(), { deep: true });
+
+    // ===== Lifecycle =====
+    onMounted(() => {
+      // Load settings
+      try {
+        const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+        if (s.dark === false) { isDark.value = false; document.documentElement.classList.add('light'); document.documentElement.classList.remove('dark'); }
+      } catch {}
+
+      loadFromStorage();
+
+      // Global keyboard
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'p') { e.preventDefault(); showCmd.value = true; }
+        if (e.key === 'Escape') { showCmd.value = false; showSearch.value = false; }
+        if (e.key === 'F11') { e.preventDefault(); focusMode.value = !focusMode.value; }
+      });
+
+      // Syntax highlight on preview
+      watch(renderedHtml, async () => {
+        await nextTick();
+        if (previewEl.value) {
+          previewEl.value.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+        }
+      }, { immediate: true });
+
+      // File delete button hover
+      document.addEventListener('mouseover', e => {
+        const item = e.target.closest('.file-item');
+        if (item) item.querySelector('.file-del-btn')?.style.setProperty('opacity', '0.7');
+      });
+      document.addEventListener('mouseout', e => {
+        const item = e.target.closest('.file-item');
+        if (item) item.querySelector('.file-del-btn')?.style.setProperty('opacity', '0');
+      });
+    });
+
+    return {
+      files, currentFileId, currentFile, viewMode, sidebarOpen, isDark, focusMode,
+      showCmd, showSearch, searchQuery, cmdQuery, cmdFocus, renamingId, isDragging,
+      previewFlex, textarea, previewEl, cmdInputEl, searchInputEl, editorWrap, resizerEl,
+      lineCount, wordCount, charCount, readingTime, searchCount, renderedHtml,
+      formatButtons, insertButtons, allCmds, filteredCmds,
+      newFile, openFile, deleteFile, saveFile, startRename, finishRename,
+      onInput, onKeydown, toggleSearch, exportMd, exportHtml, handleDrop, onFileDrop,
+      toggleTheme, moveFocus, runFocusedCmd, runCmd, formatTime, syncScroll,
+      insertFormat, insertTable, insertRaw, startResize,
+    };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+#!/bin/sh
+# Post-installation script
+# Runs after package files are unpacked
+
+PACKAGE_NAME="MarkdownEditor"
+PKG_HOME="/var/packages/${PACKAGE_NAME}/home"
+LOG_FILE="/var/log/packages/${PACKAGE_NAME}.log"
+
+mkdir -p "${PKG_HOME}/data"
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] [POSTINST] ${PACKAGE_NAME} installed successfully" >> "${LOG_FILE}"
+
+exit 0

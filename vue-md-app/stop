@@ -1,0 +1,14 @@
+#!/bin/sh
+# DSM Package Stop Script
+
+PACKAGE_NAME="MarkdownEditor"
+LOG_FILE="/var/log/packages/${PACKAGE_NAME}.log"
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [STOP] $1" >> "${LOG_FILE}"
+}
+
+log "Stopping ${PACKAGE_NAME}..."
+log "${PACKAGE_NAME} stopped."
+
+exit 0

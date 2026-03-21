@@ -1,0 +1,18 @@
+{
+  "data-share": {
+    "shares": []
+  },
+  "port": {
+    "http": {
+      "disabled": false,
+      "port": 8080,
+      "protocol": "http",
+      "desc": "Markdown Editor Web UI"
+    }
+  },
+  "web-service": {
+    "engine": "nginx",
+    "title": "MarkdownEditor",
+    "config": "/var/packages/MarkdownEditor/target/nginx.conf"
+  }
+}

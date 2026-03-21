@@ -1,0 +1,26 @@
+#!/bin/bash
+# INFO.sh — 套件元信息，被 PkgCreate.py 调用
+# DS923+ 使用 R1000 CPU，套件架构为 r1000
+
+source /pkgscripts-ng/include/pkg_util.sh 2>/dev/null || true
+
+package="MarkdownEditor"
+version="1.0.0-0001"
+os_min_ver="7.0-40000"
+firmware="7.0-40000"
+
+displayname="Markdown Editor"
+description="A beautiful Markdown editor running natively on DSM, built with React."
+description_chs="运行在 DSM 上的 Markdown 编辑器，基于 React 构建。"
+maintainer="Simon"
+maintainer_url="https://github.com/example"
+
+arch="r1000"           # DS923+ CPU 架构
+dsmuidir="ui"          # UI 文件相对于 package.tgz 的路径
+dsmappname="com.example.markdowneditor"
+
+# 套件图标（须在 package.tgz 中包含）
+# icons: PACKAGE_ICON.PNG (72x72), PACKAGE_ICON_256.PNG (256x256)
+
+[ "$(caller)" != "0 NULL" ] && return 0
+pkg_dump_info

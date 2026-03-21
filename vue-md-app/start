@@ -1,0 +1,25 @@
+#!/bin/sh
+# DSM Package Start Script
+# Logs to /var/log/packages/MarkdownEditor.log (DSM 7+)
+
+PACKAGE_NAME="MarkdownEditor"
+PKG_HOME="/var/packages/${PACKAGE_NAME}/home"
+PKG_TARGET="/var/packages/${PACKAGE_NAME}/target"
+LOG_FILE="/var/log/packages/${PACKAGE_NAME}.log"
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [START] $1" >> "${LOG_FILE}"
+}
+
+log "Starting ${PACKAGE_NAME}..."
+
+# Verify UI directory exists (linked via dsmuidir)
+if [ ! -d "${PKG_TARGET}/ui" ]; then
+    log "ERROR: UI directory not found at ${PKG_TARGET}/ui"
+    exit 1
+fi
+
+log "UI directory OK: ${PKG_TARGET}/ui"
+log "${PACKAGE_NAME} started successfully"
+
+exit 0
