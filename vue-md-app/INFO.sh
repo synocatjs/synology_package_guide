@@ -1,32 +1,47 @@
-#!/bin/sh
-# ============================================================
-# Synology DSM 7 Package INFO
-# All required fields per DSM Developer Guide 7
-# ============================================================
+#!/bin/bash
+# INFO.sh — Synology DSM 7 Package Developer Guide §1.6.1
+# Run inside chroot: source /pkgscripts-ng/include/pkg_util.sh
+# Then: ./INFO.sh > INFO   (called by SynoBuildConf/install)
 
+source /pkgscripts-ng/include/pkg_util.sh
+
+# ── Necessary fields (§1.6.1.1) ──────────────────────────────
 package="MarkdownEditor"
 version="1.0.0-0001"
 os_min_ver="7.0-40000"
-description="Professional Markdown editor built with Vue 3 + TypeScript, featuring real-time preview, syntax highlighting, and document management."
+description="A professional Markdown editor for DSM with real-time preview, syntax highlighting, multi-document management, and full keyboard shortcut support."
 arch="noarch"
-maintainer="DSM Developer"
-maintainer_url="https://github.com/example/dsm-markdown-editor"
+maintainer="Synology Developer"
 
-# Optional display fields
+# ── Optional fields (§1.6.1.2) ───────────────────────────────
 displayname="Markdown Editor"
-description_zhtw="專業的 Markdown 編輯器，基於 Vue 3 + TypeScript 構建。"
-description_zhcn="专业的 Markdown 编辑器，基于 Vue 3 + TypeScript 构建，支持实时预览和文档管理。"
+displayname_enu="Markdown Editor"
+displayname_chs="Markdown 编辑器"
+displayname_cht="Markdown 編輯器"
 
-# DSM integration — links ui/ into DSM webman/3rdparty/MarkdownEditor/
-dsmuidir="ui"
-dsmappname="SYNO.SDS.MarkdownEditor"
-dsmapppage="SYNO.SDS.MarkdownEditor.Main"
-dsmapplaunchname="SYNO.SDS.MarkdownEditor"
+description_enu="A professional Markdown editor for DSM with real-time preview and syntax highlighting."
+description_chs="专业的 Markdown 编辑器，支持实时预览、语法高亮和多文档管理。"
 
-# Package Center metadata
-thirdparty="yes"
+maintainer_url="https://github.com/example/dsm-markdown-editor"
 support_url="https://github.com/example/dsm-markdown-editor/issues"
-beta="false"
 
-# DSM 7: PACKAGE_ICON.PNG must be 64×64 (breaking change from 72×72)
-# icons: PACKAGE_ICON.PNG (64x64), PACKAGE_ICON_256.PNG (256x256)
+# DSM desktop integration (§1.7.2)
+# dsmuidir links package.tgz/ui/ → /usr/syno/synoman/webman/3rdparty/MarkdownEditor/
+dsmuidir="ui"
+dsmappname="com.example.MarkdownEditor"
+
+# Admin UI (§1.6.1.2 adminport / adminurl / adminprotocol)
+adminprotocol="http"
+adminport="8585"
+adminurl="webman/3rdparty/MarkdownEditor/index.html"
+
+# Install behaviour
+silent_install="yes"
+silent_upgrade="yes"
+silent_uninstall="yes"
+thirdparty="yes"
+beta="no"
+
+# Guard: only dump when called directly, not sourced
+[ "$(caller)" != "0 NULL" ] && return 0
+pkg_dump_info

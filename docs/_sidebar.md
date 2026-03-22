@@ -180,3 +180,4 @@
 * [八、常见问题](common_questions/)
   * [1. 如何查找 Synology NAS 的 CPU 型号？](common_questions/how_to_find_synology_nas_cpu_model.md)
   * [2. 如何查找平台和架构表？](common_questions/how_to_find_platform_and_architecture.md)
+  * [3. 为什么无法安装和卸载](common_questions/why_cannot_install_and_uninstall.md)

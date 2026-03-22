@@ -159,7 +159,42 @@ create_package_tgz() {
 
 ```bash
 cd /toolkit/pkgscripts-ng/
-./PkgCreate.py -v 7.0 -p avoton -c ExamplePackage
+./PkgCreate.py -v 7.2 -p r1000 -c ExamplePackage
+```
+
+这一步会编译一段时间，直到输出如下信息：
+
+```bash
+[INFO] Install ExamplePackage finished!
+1 projects, 0 failed, 0 blocked.
+[INFO] Finished SynoInstall script.
+
+============================================================
+               Start to run "Collect package"               
+------------------------------------------------------------
+/home/coayang/Documents/toolkit/build_env/ds.r1000-7.2/image/packages/ExamplePackage-x86_64-1.0.0-0001.spk -> /home/coayang/Documents/toolkit/result_spk/ExamplePackage-1.0.0-0001
+/home/coayang/Documents/toolkit/build_env/ds.r1000-7.2/image/packages/ExamplePackage-x86_64-1.0.0-0001_debug.spk -> /home/coayang/Documents/toolkit/result_spk/ExamplePackage-1.0.0-0001
+
+============================================================
+                    Time Cost Statistic                     
+------------------------------------------------------------
+00:00:00: Traverse project
+00:00:00: Link Project
+00:00:12: Build Package
+00:00:03: Install Package[--with-debug]
+00:00:03: Install Package
+00:00:00: Collect package
+
+[SUCCESS] ./PkgCreate.py -v 7.2 -p r1000 -c ExamplePackage finished.
+```
+
+
+生成的文件在 `toolkit/result_spk` 目录下
+
+```bash
+result_spk$ ls
+ExamplePackage-1.0.0-0001
+
 ```
 
 **项目目录结构**
@@ -174,8 +209,38 @@ cd /toolkit/pkgscripts-ng/
         └── *.spk
 ```
 
+例如我的项目目录结构如下：
+
+```bash
+result_spk/
+└── ExamplePackage-1.0.0-0001
+    ├── ExamplePackage-x86_64-1.0.0-0001_debug.spk
+    └── ExamplePackage-x86_64-1.0.0-0001.spk
+```
+
+> 从虚拟机下载文件：
+> `scp username@192.168.1.123:/home/user/filename.txt /home/user/`
+
 ## 安装并测试套件
+
+> 官方建议安装测试，但是我不建议，因为您可能卡在无法安装和无法卸载。
 
 进入 DSM > Package Center > Manual Install，然后选择你的 `.spk` 文件进行安装。
 
 一旦你安装并启动了套件，你可以在 UI 上看到它的消息，并在 `/var/log/messages` 中查看日志。
+
+> 如果卡在协议部分，可以稍作等待、完整浏览协议，或者重新安装试试。目前我也不知道为什么。
+>
+> 如果卡在卸载的话，先试试重启，具体“常见问题”中查看。
+
+```bash
+sylonogy-dsm$ cat /var/log/messages
+```
+
+输出示例：
+
+```
+2026-03-22T17:29:05+08:00 DS923plus examplePkg[3082]: [ExamplePkg]] Start sample package ...
+2026-03-22T17:29:05+08:00 DS923plus examplePkg[3082]: [ExamplePkg] Total Ram: 4079349760
+2026-03-22T17:29:05+08:00 DS923plus examplePkg[3082]: [ExamplePkg] Free RAM: 309911552
+```
