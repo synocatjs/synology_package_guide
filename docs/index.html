@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>群晖套件开发文档</title>
-    
+
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-    
+
     <style>
         /* 折叠图标自定义样式 */
-        .sidebar-nav li > a.chapter:before {
+        .sidebar-nav li>a.chapter:before {
             content: "▼";
             float: left;
             margin-left: -18px;
@@ -17,25 +18,26 @@
             opacity: 0.5;
             transition: transform 0.2s;
         }
-        
-        .sidebar-nav li.collapse > a.chapter:before {
+
+        .sidebar-nav li.collapse>a.chapter:before {
             content: "▶";
         }
-        
-        .sidebar-nav li > a.chapter:hover:before {
+
+        .sidebar-nav li>a.chapter:hover:before {
             opacity: 1;
         }
-        
+
         /* 当前激活的菜单高亮 */
-        .sidebar-nav li.active > a {
+        .sidebar-nav li.active>a {
             color: var(--theme-color, #42b983);
             font-weight: bold;
         }
     </style>
 </head>
+
 <body>
     <div id="app"></div>
-    
+
     <script>
         window.$docsify = {
             name: '群晖套件开发',
@@ -45,7 +47,7 @@
             auto2top: true,
             mergeNavbar: true,
             themeColor: '#42b983',
-            
+
             // 侧边栏配置
             sidebar: {
                 autoCollapse: true,       // 自动折叠其他层级
@@ -53,23 +55,25 @@
             }
         };
     </script>
-    
+
     <!-- Docsify 核心库 -->
     <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-    
+
     <!-- 官方侧边栏折叠插件 -->
     <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
-    
+
     <!-- 可选：搜索插件 -->
     <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
-    
+
     <!-- 可选：代码复制插件 -->
     <script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2/dist/docsify-copy-code.min.js"></script>
     <!-- 代码高亮 -->
-     <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-c.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-http.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-c.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-http.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-makefile.min.js"></script>
 
 </body>
+
 </html>

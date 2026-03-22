@@ -1,21 +1,28 @@
 * [一、首页](/)
 
 * [二、开发基础](base/)
-  * [1. 开发环境](base/dev_env.md)
+  * [1. 系统要求](base/requirements.md)
   * [2. 开发工具](base/dev_tools.md)
+  * [3. 开发环境](base/dev_env.md)
 
 * [三、快速开始](start/)
-  * [1. 系统要求](start/requirements.md)
+  * [1. 第一个套件](start/first_package.md)
+  * [2. 可用平台](start/available_platforms.md)
 
-* [四、SPK 包介绍](spk_introduction/)
+* [四、开发工具](toolkit/)
+  * [1. 构建阶段](toolkit/build_phase.md)
+  * [2. 打包阶段](toolkit/package_phase.md)
+  * [3. 参考资料](toolkit/reference.md)
+
+* [五、SPK 包介绍](spk_introduction/)
   * [1. INFO 文件介绍](spk_introduction/file_info.md)
     * [INFO 必须字段](spk_introduction/info_fields_necessary.md)
     * [INFO 可选字段](spk_introduction/info_fields_optional.md)
   * [2. package.tgz 文件](spk_introduction/file_package_tgz.md)
   * [3. conf 文件夹](spk_introduction/folder_conf.md)
-  * [4. wizard ui 文件](spk_introduction/wizard_ui_files.md)
+  * [4. 向导用户界面文件](spk_introduction/wizard_ui_files.md)
 
-* [五、DSM 集成](synology_dsm_integration/)
+* [六、DSM 集成](synology_dsm_integration/)
   * [1. 套件文件系统层级标准](synology_dsm_integration/fhs.md)
   * [2. 桌面应用程序](synology_dsm_integration/desktop_application/)
     * [应用程序配置](synology_dsm_integration/desktop_application/desktop_application_configuration.md)
@@ -46,7 +53,7 @@
   * [6. 端口配置](synology_dsm_integration/resource/list/port_configuration.md)
   * [7. 监控](synology_dsm_integration/resource/list/monitor.md)
 
-* [六、办公套件 Web API](office_suite_web_api/)
+* [七、办公套件 Web API](office_suite_web_api/)
   * [1. Drive](office_suite_web_api/drive/)
     * [授权](office_suite_web_api/drive/auth/)
       * [登陆](office_suite_web_api/drive/auth/sign_in.md)
@@ -170,6 +177,6 @@
       * [获取日历列表](office_suite_web_api/calendar/calendar/list.md)
       * [导出 ICS](office_suite_web_api/calendar/calendar/export.md)
 
-* [七、常见问题](common_questions/)
+* [八、常见问题](common_questions/)
   * [1. 如何查找 Synology NAS 的 CPU 型号？](common_questions/how_to_find_synology_nas_cpu_model.md)
   * [2. 如何查找平台和架构表？](common_questions/how_to_find_platform_and_architecture.md)

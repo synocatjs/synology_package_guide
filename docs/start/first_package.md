@@ -2,9 +2,13 @@
 
 请确保你已经为你的 NAS 准备好了开发环境。
 
-**下载模板套件**
+## 模板套件
 
-你可以从 https://github.com/SynologyOpenSource/ExamplePackages 下载我们的模板套件，并将 `ExamplePackages/ExamplePackage` 目录放置到 `/toolkit/source/ExamplePackage`。
+Synology 提供了一个模板套件，你可以用它来快速创建你的第一个套件。
+
+你可以从 https://github.com/SynologyOpenSource/ExamplePackages 下载模板套件，并将 `ExamplePackages/ExamplePackage` 目录放置到 `/toolkit/source/ExamplePackage`。
+
+**项目目录结构**
 
 ```
 /toolkit/
@@ -36,7 +40,7 @@
             └── install
 ```
 
-**配置构建配置**
+## 配置构建配置
 
 构建套件和打包套件的步骤在 `${project_path}/SynoBuildConf/` 下配置。你可以看到三个文件：
 
@@ -48,7 +52,7 @@
 
 我们不关心你在构建配置中做什么，它甚至可以什么都不做。构建系统只会 chroot 进入环境，然后根据命令调用相应的 build、install 脚本。
 
-**配置属性**
+### 配置属性
 
 套件信息及其行为由 `INFO.sh` 控制，该文件在安装时会被转换为 `INFO` 文件。
 
@@ -66,7 +70,7 @@ maintainer="Synology Inc."
 pkg_dump_info
 ```
 
-**配置生命周期行为**
+### 配置生命周期行为
 
 套件控制脚本可以在 `${project_path}/scripts/` 中找到。你可以在每个阶段控制行为，例如在套件启动/停止时调用 examplePkg 程序。
 
@@ -90,7 +94,7 @@ case $1 in
 esac
 ```
 
-**编写程序并配置其编译和安装**
+## 编写程序并配置其编译和安装
 
 通过套件将编译好的程序带入 DSM 是很常见的。你可以直接用 C 编写程序，并添加一个 Makefile 来编译你的程序。
 
@@ -129,7 +133,11 @@ clean:
     rm -rf *.o $(EXEC)
 ```
 
-任何附加文件（例如编译后的程序、媒体资源）都应该打包到 `.spk` 内的 `package.tgz` 文件中。我们提供了几个脚本命令来执行此类操作。在这个示例中，我们将通过 install 构建脚本来打包编译好的 examplePkg 可执行文件。
+任何附加文件（例如编译后的程序、媒体资源）都应该打包到 `.spk` 内的 `package.tgz` 文件中。
+
+我们提供了几个脚本命令来执行此类操作。
+
+在这个示例中，我们将通过 install 构建脚本来打包编译好的 examplePkg 可执行文件。
 
 ```bash
 # SynoBuildConf/install (部分)
@@ -145,7 +153,7 @@ create_package_tgz() {
 }
 ```
 
-**构建并打包套件**
+## 构建并打包套件
 
 完成套件源代码的准备工作后，你可以使用以下命令构建并将套件打包为 `.spk` 文件，存放于 `/toolkit/result_spk/${package}-${version}/*.spk`。
 
@@ -154,7 +162,9 @@ cd /toolkit/pkgscripts-ng/
 ./PkgCreate.py -v 7.0 -p avoton -c ExamplePackage
 ```
 
-```
+**项目目录结构**
+
+```bash
 /toolkit/
 ├── pkgscripts-ng/
 ├── build_env/
@@ -164,15 +174,8 @@ cd /toolkit/pkgscripts-ng/
         └── *.spk
 ```
 
-**安装并测试套件**
+## 安装并测试套件
 
 进入 DSM > Package Center > Manual Install，然后选择你的 `.spk` 文件进行安装。
 
 一旦你安装并启动了套件，你可以在 UI 上看到它的消息，并在 `/var/log/messages` 中查看日志。
-
-**了解更多**
-
-- Synology Toolkit
-- Synology Package
-- Synology DSM Integration
-- Package Examples

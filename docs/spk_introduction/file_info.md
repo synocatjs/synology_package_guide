@@ -2,7 +2,7 @@
 
 此文件描述套件的属性
 
-### INFO 字段格式：
+## INFO 字段格式：
 
 每个属性定义为键/值对，用等号分隔
 
@@ -10,14 +10,12 @@
 key=value
 ```
 
-### INFO 字段列表：
+## INFO 字段列表：
 
 您可以根据需求定义以下属性：
 
-- [必需的字段](./fields_necessary.md)
-- [可选的字段](./fields_optional.md)
-
-#### 可选字段
+- [必需的字段](spk_introduction/info_fields_necessary.md)
+- [可选的字段](spk_introduction/info_fields_optional.md)
 
 ```bash
 thirdparty="yes"
@@ -33,6 +31,6 @@ version="0.0.1-0001"
 arch="noarch"
 ```
 
-### 如何编写 INFO 文件
+## 如何编写 INFO 文件
 
 无需手动编写 INFO 文件，您可以使用 Package Toolkit 中的辅助函数以编程方式生成某些字段。更多信息请参考 INFO.sh。
