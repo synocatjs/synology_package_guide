@@ -2,10 +2,10 @@
 
 build:
 	@echo "build..."
-	cd react-app;pnpm run build
+	cd react-demo-app;pnpm run build
 dev:
 	@echo "dev..."
-	cd react-app;pnpm run dev
+	cd react-demo-app;pnpm run dev
 docs:
 	@echo "docs..."
 	docsify serve docs

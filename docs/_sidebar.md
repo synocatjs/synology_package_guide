@@ -181,3 +181,29 @@
   * [1. 如何查找 Synology NAS 的 CPU 型号？](common_questions/how_to_find_synology_nas_cpu_model.md)
   * [2. 如何查找平台和架构表？](common_questions/how_to_find_platform_and_architecture.md)
   * [3. 为什么无法安装和卸载](common_questions/why_cannot_install_and_uninstall.md)
+
+* [九、附录](appendix/)
+  * [1. 示例包](appendix/example_packages/)
+    * [INFO 文件](appendix/example_packages/info.md)
+    * [LICENSE 文件](appendix/example_packages/license.md)
+    * [PACKAGE_ICON 文件](appendix/example_packages/package_icon.md)
+    * [WIZARD_UIFILES 目录](appendix/example_packages/wizard_uifiles/)
+      * [src 目录](appendix/example_packages/wizard_uifiles/src/)
+      * [create_install_uifile 文件](appendix/example_packages/wizard_uifiles/create_install_uifile.md)
+      * [create_uninstall_uifile 文件](appendix/example_packages/wizard_uifiles/create_uninstall_uifile.md)
+      * [uifile_setting 文件](appendix/example_packages/wizard_uifiles/uifile_setting.md)
+    * [ui 目录](appendix/example_packages/ui/)
+    * [SynoBuildConf 目录](appendix/example_packages/synobuildconf/)
+      * [build 文件](appendix/example_packages/synobuildconf/build.md)
+      * [depends 文件](appendix/example_packages/synobuildconf/depends.md)
+      * [install 文件](appendix/example_packages/synobuildconf/install.md)
+      
+    * [scripts 目录](appendix/example_packages/scripts/)
+      * [postinst 文件](appendix/example_packages/scripts/postinst.md)
+      * [start-stop-status 文件](appendix/example_packages/scripts/start-stop-status.md)
+    * [conf 目录](appendix/example_packages/conf/)
+      * [Provilege 文件](appendix/example_packages/conf/provilege.md)
+      * [Resource 文件](appendix/example_packages/conf/resource.md)
+
+  
+    
