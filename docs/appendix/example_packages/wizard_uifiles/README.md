@@ -1,7 +1,7 @@
 # wizard uifiles 目录
 这是一个 Synology DSM 包安装向导（WIZARD_UIFILES）项目，用于创建自定义的安装/卸载界面。
 
-## 项目结构分析
+## 项目结构
 
 ```bash
 WIZARD_UIFILES/
