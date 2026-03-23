@@ -1,4 +1,4 @@
-## 构建阶段
+# 构建阶段
 
 在构建阶段，`PkgCreate.py` 将编译项目及其依赖项目。请注意，在此阶段，`PkgCreate.py` 依赖两个构建脚本（`SynoBuildConf/build` 和 `SynoBuildConf/depends`）来获取必要信息。
 

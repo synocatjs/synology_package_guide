@@ -1,4 +1,4 @@
-## 打包阶段
+# 打包阶段
 
 在打包阶段，`PkgCreate.py` 根据元数据打包所有必要文件，并在 `/toolkit/result_spk` 创建 `.spk` 文件。如果您希望 `PkgCreate.py` 跳过构建阶段直接进入打包阶段，只需使用 `-i` 选项运行 `PkgCreate.py`。
 
@@ -9,7 +9,7 @@ pkgscripts-ng/PkgCreate.py -i ${project}
 
 ---
 
-### Toolkit 目录结构
+## Toolkit 目录结构
 
 ```
 /toolkit/
@@ -28,7 +28,7 @@ pkgscripts-ng/PkgCreate.py -i ${project}
 
 ---
 
-### 打包阶段工作流程
+## 打包阶段工作流程
 
 ![pack stage workflow](../assets/pack_stage_workflow.png)
 
@@ -40,7 +40,7 @@ pkgscripts-ng/PkgCreate.py -i ${project}
 
 ---
 
-### SynoBuildConf/install
+## SynoBuildConf/install
 
 此文件必须使用 bash 编写，指示如何打包您的项目。当前工作目录是 chroot 环境下的 `/source/${project}`。如果这是您套件的顶级项目，此文件将定义如何创建 `.spk` 文件，包括目录结构和 INFO 文件。
 
@@ -93,7 +93,7 @@ create_inner_tarball
 create_spk
 ```
 
-#### 脚本说明
+## 脚本说明
 
 - 脚本首先调用 `PrepareDirs` 函数，为项目准备必要的文件夹
 - 创建文件夹后，脚本调用 `SetupPackageFiles` 将必要资源文件移动到 `$INST_DIR` 和 `$PKG_DIR`
@@ -109,7 +109,7 @@ create_spk
 
 ---
 
-### INFO.sh
+## INFO.sh
 
 如前所述，`INFO.sh` 是一个可选脚本。您可以手动创建 INFO 文件或将代码移至 `SynoBuildConf/install`。然而，我们强烈建议使用 `INFO.sh`，这样您可以将 INFO 文件的创建与 `SynoBuildConf/install` 分离。
 
@@ -141,13 +141,13 @@ pkg_dump_info
 
 ---
 
-### SPK 打包函数
+## SPK 打包函数
 
 Synology 套件框架提供了多个函数来提高打包效率。导入 `/pkgscripts-ng/include/pkg_util.sh` 后，即可使用生成 INFO 文件中的架构信息、分离 SPK 名称和创建 SPK 等功能。
 
 ---
 
-### SPK 平台函数
+## SPK 平台函数
 
 `.spk` 可以安装在一个或多个平台上。您可以通过 INFO 文件决定哪些平台可以安装。
 
@@ -157,7 +157,7 @@ Synology 套件框架提供了多个函数来提高打包效率。导入 `/pkgsc
 | `pkg_get_platform_family` | `x86_64` `i686` `armv7` `armv5` `ppc` 等 | 将具有相同内核的平台统一为一个平台系列。套件可在同一系列的 Synology 型号上运行。 |
 | `pkg_get_spk_platform` | `bromolow` `cedarview` `qoriq` `armadaxp` 等 | 直接输出当前使用的 toolkit 环境所在的平台。套件只能在特定平台上运行。 |
 
-#### 平台选择指南
+### 平台选择指南
 
 | 场景 | 推荐方法 | arch 值示例 |
 |------|----------|-------------|
@@ -167,7 +167,7 @@ Synology 套件框架提供了多个函数来提高打包效率。导入 `/pkgsc
 
 ---
 
-### SPK 命名函数
+## SPK 命名函数
 
 生成 SPK 后，需要按平台区分 SPK 名称。可以使用以下 SPK 名称函数：
 
@@ -181,7 +181,7 @@ Synology 套件框架提供了多个函数来提高打包效率。导入 `/pkgsc
 
 ---
 
-### SPK 创建函数
+## SPK 创建函数
 
 开发者可以使用 `pkg_make_spk` 创建 SPK。
 
@@ -195,7 +195,7 @@ pkg_make_spk $source_path $dest_path $spk_name
 | `dest_path` | 目标 SPK 路径 |
 | `spk_name` | 带或不带平台信息的 SPK 名称 |
 
-#### 示例
+### 示例
 
 ```bash
 pkg_make_spk /tmp/_test_spk "/image/packages" $(pkg_get_spk_family_name)

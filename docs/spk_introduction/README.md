@@ -3,7 +3,7 @@
 在本节中，您将了解群晖套件（.spk）的文件结构及各文件的含义。
 
 ```bash
-spk
+name.spk
 ├── INFO
 ├── package.tgz
 ├── scripts
@@ -42,3 +42,4 @@ spk
 
 要创建这样的套件结构，请参阅打包阶段了解详细步骤。
 
+实际上这可以通过 `pkgscript-ng` 自动创建，不必手动创建。
