@@ -21,15 +21,15 @@ pkg_dump_info
 
 这是一个 **Synology DSM 包信息配置文件**，用于定义 SPK (Synology Package) 包的元数据。
 
-## 📋 文件结构解析
 
-### 1. 引入工具函数
+## 1. 引入工具函数
+
 ```bash
 source /pkgscripts/include/pkg_util.sh
 ```
 - 引入 Synology 包构建工具的函数库
 
-### 2. 包元数据定义
+## 2. 包元数据定义
 
 | 字段 | 说明 | 示例值 |
 |------|------|--------|
@@ -42,13 +42,13 @@ source /pkgscripts/include/pkg_util.sh
 | `description` | 包描述 | `"this is an example package"` |
 | `dsmuidir` | Web UI 目录 | `"ui"` |
 
-### 3. 架构说明
+## 3. 架构说明
 ```bash
 arch="$(pkg_get_platform)"
 ```
 - `pkg_get_platform` 函数会根据当前构建环境自动检测架构
 
-### 4. 输出逻辑
+## 4. 输出逻辑
 ```bash
 [ "$(caller)" != "0 NULL" ] && return 0
 pkg_dump_info
