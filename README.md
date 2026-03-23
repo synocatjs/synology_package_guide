@@ -1,1 +1,5 @@
-# synology_package_guide
+# Synology Package Guide
+
+群晖套件开发手册，中文版。
+
+
