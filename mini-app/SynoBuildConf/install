@@ -1,8 +1,6 @@
 #!/bin/bash
 # Copyright (C) 2000-2020 Synology Inc. All rights reserved.
 
-set -e
-
 ### Use PKG_DIR as working directory.
 PKG_DIR=/tmp/_test_spk
 rm -rf $PKG_DIR
@@ -12,72 +10,85 @@ mkdir -p $PKG_DIR
 source /pkgscripts/include/pkg_util.sh
 
 create_package_tgz() {
-    local package_tgz_dir=/tmp/_package_tgz
-    local binary_dir=$package_tgz_dir/usr/local/bin
+	local package_tgz_dir=/tmp/_package_tgz
+	local binary_dir=$package_tgz_dir/usr/local/bin
 
-    ### clear destination directory
-    rm -rf $package_tgz_dir && mkdir -p $package_tgz_dir
+	### clear destination directory
+	rm -rf $package_tgz_dir && mkdir -p $package_tgz_dir
 
-    ### install demo binary
-    mkdir -p $binary_dir
-    if [ -f ../demo ]; then
-        cp -av ../demo $binary_dir
-        chmod 755 $binary_dir/demo
-    else
-        echo "Error: demo binary not found!"
-        exit 1
-    fi
+	### install needed file into PKG_DIR
+	mkdir -p $binary_dir
+	
+	# 检查 demo 文件是否存在
+	if [ -f ../demo ]; then
+		cp -av ../demo $binary_dir
+	elif [ -f ../../demo ]; then
+		cp -av ../../demo $binary_dir
+	elif [ -f /source/mini-app/demo ]; then
+		cp -av /source/mini-app/demo $binary_dir
+	else
+		echo "Error: demo binary not found!"
+		exit 1
+	fi
+	
+	# 如果 Makefile 有 install 目标，执行它
+	if grep -q "^install:" ../Makefile 2>/dev/null; then
+		make -C .. install DESTDIR="$package_tgz_dir" INSTALLDIR="$package_tgz_dir"
+	fi
+	
+	# 注意：移除了 make packageinstall，因为你的 Makefile 没有这个目标
 
-    ### create package.tgz
-    pkg_make_package $package_tgz_dir "${PKG_DIR}"
+	### create package.tgz $1: source_dir $2: dest_dir
+	pkg_make_package $package_tgz_dir "${PKG_DIR}"
 }
 
 create_spk(){
-    # Copy scripts if they exist
-    if [ -d ../script ]; then
-        cp -av ../script $PKG_DIR/scripts
-    elif [ -d ../scripts ]; then
-        cp -av ../scripts $PKG_DIR/scripts
-    fi
-    
-    # Copy icons
-    if ls ../PACKAGE_ICON*.PNG 1> /dev/null 2>&1; then
-        cp -av ../PACKAGE_ICON*.PNG $PKG_DIR
-    fi
-    
-    # Copy conf
-    if [ -d ../conf ]; then
-        cp -av ../conf $PKG_DIR
-    fi
+	# 复制 scripts（如果存在）
+	if [ -d ../scripts ]; then
+		cp -av ../scripts $PKG_DIR/scripts
+	elif [ -d ../script ]; then
+		cp -av ../script $PKG_DIR/scripts
+	fi
+	
+	# 复制图标（如果存在）
+	if ls ../PACKAGE_ICON*.PNG 1> /dev/null 2>&1; then
+		cp -av ../PACKAGE_ICON*.PNG $PKG_DIR
+	fi
+	
+	# 复制 conf（如果存在）
+	if [ -d ../conf ]; then
+		cp -av ../conf $PKG_DIR
+	fi
+	
+	# 复制 LICENSE（如果存在）
+	if [ -f ../LICENSE ]; then
+		cp -av ../LICENSE $PKG_DIR
+	fi
 
-    # Generate INFO file (from root directory)
-    if [ -f ../INFO.sh ]; then
-        cd ..
-        ./INFO.sh > INFO
-        cp INFO $PKG_DIR/INFO
-        cd SynoBuildConf
-    else
-        echo "Warning: INFO.sh not found in parent directory"
-        # Create minimal INFO file
-        cat > $PKG_DIR/INFO << 'EOF'
+	# 生成 INFO 文件
+	if [ -f ../INFO.sh ]; then
+		(cd .. && ./INFO.sh > INFO && cp INFO $PKG_DIR/INFO)
+	else
+		# 创建默认 INFO 文件
+		cat > $PKG_DIR/INFO << EOF
 package="mini-app"
 version="1.0.0"
 arch="x86_64"
 maintainer="Your Name"
 distributor="Your Name"
 description="Demo package for Synology DSM"
+displayname="Mini App"
 EOF
-    fi
+	fi
 
-    ### Create the final spk
-    mkdir -p /image/packages
-    echo "Creating SPK package..."
-    pkg_make_spk ${PKG_DIR} "/image/packages" $(pkg_get_spk_family_name)
+	### Create the final spk.
+	mkdir -p /image/packages
+	pkg_make_spk ${PKG_DIR} "/image/packages" $(pkg_get_spk_family_name)
 }
 
 main() {
-    create_package_tgz
-    create_spk
+	create_package_tgz
+	create_spk
 }
 
 main "$@"
