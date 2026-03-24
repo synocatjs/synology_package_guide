@@ -1,4 +1,6 @@
-**准备环境**
+# 可用的平台
+
+## 准备环境
 
 **安装 Toolkit**
 
@@ -75,7 +77,7 @@ cd /toolkit/pkgscripts-ng/
         └── usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root/
 ```
 
-**可用的平台**
+## 可用的平台
 
 你可以使用以下命令之一来显示可用的平台。如果未指定 `-v`，将列出所有版本的可用平台。
 

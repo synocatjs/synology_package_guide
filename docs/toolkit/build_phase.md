@@ -8,7 +8,7 @@ PkgCreate.py -v ${version} -p ${platform} ${project}  # 在特定平台版本上
 
 ---
 
-### Toolkit 目录结构
+## Toolkit 目录结构
 
 ```
 /toolkit/
@@ -55,32 +55,32 @@ PkgCreate.py -v ${version} -p ${platform} ${project}  # 在特定平台版本上
 
 ---
 
-### 重要说明
+## 重要说明
 
 - `SynoBuildConf/build` 在 chroot 环境 `/toolkit/build_env/ds.${platform}` 中执行
 
 
 
 
-### 流程解释
+## 流程解释
 
-#### 1. Resolve Project Dependency（解析项目依赖）
+### 1. Resolve Project Dependency（解析项目依赖）
 - 读取 `SynoBuildConf/depends` 文件
 - 检查并解析当前项目的依赖项目
 
-#### 2. Copy Project to Building Environment（复制项目到构建环境）
+### 2. Copy Project to Building Environment（复制项目到构建环境）
 - 将源代码、配置文件等复制到 **Chroot Environment**（隔离的构建环境）中
 
 
-#### 3. Compile Source Code（编译源代码）
+### 3. Compile Source Code（编译源代码）
 - 在 Chroot Environment 内执行编译
 - 依据 `SynoBuildConf/build` 等文件和配置和 **Makefile** 来编译源代码
 
-#### 4. Enter Pack Stage（进入打包阶段）
+### 4. Enter Pack Stage（进入打包阶段）
 - 编译完成后，流程进入 **Pack Stage**
 
 
-### SynoBuildConf/depends
+## SynoBuildConf/depends
 
 `PkgCreate.py` 将根据此配置文件解析您的依赖关系。您需要在此文件中指定项目的依赖关系和构建环境。例如：
 
@@ -105,7 +105,7 @@ all="7.2.2"   # 特定平台的 toolkit 环境版本（所有平台默认使用 
 
 ---
 
-### 检查依赖顺序
+## 检查依赖顺序
 
 您可以使用 `ProjDepends.py` 脚本查看项目依赖顺序是否正确。选项 `-x0` 将遍历 `${project}` 的所有依赖项目。
 
@@ -118,7 +118,7 @@ cd /toolkit/pkgscripts-ng
 
 ---
 
-### SynoBuildConf/build
+## SynoBuildConf/build
 
 `SynoBuildConf/build` 是一个 shell 脚本，告诉 `PkgCreate.py` 如何编译您的项目。此 shell 脚本的当前工作目录位于 chroot 环境下的 `/source/${project}`。
 
@@ -126,7 +126,7 @@ cd /toolkit/pkgscripts-ng
 
 ---
 
-### 环境变量
+## 环境变量
 
 您可以在 `/toolkit/build_env/ds.${platform}-${version}/{env.mak, env32/64.mak}` 中找到这些变量。它们可以在 `SynoBuildConf/build` 中使用：
 
@@ -155,7 +155,7 @@ cd /toolkit/pkgscripts-ng
 
 ---
 
-### SynoBuildConf/build 示例
+## SynoBuildConf/build 示例
 
 ```bash
 # SynoBuildConf/build
@@ -173,7 +173,7 @@ make ${MAKE_FLAGS}
 
 ---
 
-### 检查预构建项目
+## 检查预构建项目
 
 Synology toolkit 环境包含选定的预构建项目。您可以进入 chroot 并使用以下命令检查所需头文件或项目是否由 toolkit 提供：
 
@@ -187,7 +187,7 @@ dpkg -L {project_dev}                # 列出项目安装文件
 dpkg -S {header/library_pattern}     # 搜索头文件/库文件模式
 ```
 
-#### 示例：检查 zlib 库
+### 示例：检查 zlib 库
 
 ```bash
 chroot /toolkit/build_env/ds.avoton-7.0/
@@ -222,13 +222,13 @@ zlib-1.x-avoton-dev: /usr/local/x86_64-pc-linux-gnu/x86_64-pc-linux-gnu/sys-root
 
 ---
 
-### 交叉编译依赖处理
+## 交叉编译依赖处理
 
 一些开源项目在构建时需要其他项目的交叉编译产品。例如，Python 在配置时需要 libffi 和 zlib，我们需要在构建 Python 之前提供这两个项目。您可以在构建脚本中将交叉编译产品安装到目标位置。更多信息请参阅编译开源项目：nmap。
 
 ---
 
-### Makefile 示例
+## Makefile 示例
 
 以下示例展示了一个 Makefile。大部分内容包含典型的 makefile 规则。注意，在编写项目 Makefile 时，您可以使用 `/env.mak` 中的预定义变量。
 

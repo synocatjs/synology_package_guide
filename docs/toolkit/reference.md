@@ -1,10 +1,10 @@
-## 参考资料
+# 参考资料
 
 本节介绍 Package Toolkit 的高级用法。
 
 ---
 
-### PkgCreate.py 命令选项列表
+## PkgCreate.py 命令选项列表
 
 下表列出了一些 `PkgCreate.py` 命令选项：
 
@@ -25,7 +25,7 @@
 
 ---
 
-### 不同阶段的命令选项关系
+## 不同阶段的命令选项关系
 
 下表显示了不同阶段中命令选项的关系。您可以根据需求选择合适的选项。对于大多数情况，选项 `-c` 已足够。
 
@@ -38,7 +38,7 @@
 
 ---
 
-### 平台特定依赖
+## 平台特定依赖
 
 平台特定依赖意味着您可以通过在以下部分添加 `:${platform}` 后缀来为不同平台设置不同的依赖项目：`BuildDependent` 和 `ReferenceOnly`。以下示例展示了 `libbar-1.0` 在 `816x` 和 `armada370` 平台上的依赖配置：
 
@@ -58,7 +58,7 @@ all="7.0"
 
 ---
 
-### 自定义 SPK 文件收集方式
+## 自定义 SPK 文件收集方式
 
 默认情况下，`PkgCreate.py` 会根据 `/toolkit/build_env/ds.${platform}-${version}/source/${project}/INFO` 将 SPK 文件移动到 `/toolkit/result_spk`。您可以通过添加一个钩子 `SynoBuildConf/collect` 来实现自定义的收集操作。
 
@@ -72,7 +72,7 @@ all="7.0"
 
 `SynoBuildConf/collect` 的当前工作目录是 chroot 环境下的 `/source/${project}`。
 
-#### 示例收集脚本
+## 示例 collect 脚本
 
 ```bash
 #!/bin/bash

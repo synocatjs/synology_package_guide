@@ -183,7 +183,7 @@
   * [3. 为什么无法安装和卸载](common_questions/why_cannot_install_and_uninstall.md)
 
 * [九、附录](appendix/)
-  * [1. 示例包](appendix/example_packages/)
+  * [1. 官方示例包](appendix/example_packages/)
     * [INFO 文件](appendix/example_packages/info.md)
     * [LICENSE 文件](appendix/example_packages/license.md)
     * [PACKAGE_ICON 文件](appendix/example_packages/package_icon.md)
@@ -206,4 +206,4 @@
       * [Resource 文件](appendix/example_packages/conf/resource.md)
 
   
-    
+  * [2. 最小化套件](appendix/minimal_suite/)    
