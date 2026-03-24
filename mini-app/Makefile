@@ -1,12 +1,22 @@
-# Makefile
+# Makefile for Synology DSM Package
 include /env.mak
-EXEC= examplePkg
-OBJS= examplePkg.o
+
+EXEC = demo
+OBJS = domo.o
+
 all: $(EXEC)
+
 $(EXEC): $(OBJS)
-    $(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
 install: $(EXEC)
-    mkdir -p $(DESTDIR)/usr/bin/
-    install $< $(DESTDIR)/usr/bin/
+	mkdir -p $(DESTDIR)/var/packages/$(PKG_NAME)/target/bin/
+	install -m 755 $(EXEC) $(DESTDIR)/var/packages/$(PKG_NAME)/target/bin/
+
 clean:
-    rm -rf *.o $(EXEC)
+	rm -rf *.o $(EXEC)
+
+.PHONY: all install clean
