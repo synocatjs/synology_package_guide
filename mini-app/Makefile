@@ -2,7 +2,7 @@
 include /env.mak
 
 EXEC = demo
-OBJS = domo.o
+OBJS = demo.o
 
 all: $(EXEC)
 
