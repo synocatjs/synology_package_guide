@@ -27,6 +27,9 @@
     * [1.1 INFO 必须字段](spk_introduction/info_fields_necessary.md)
     * [1.2 INFO 可选字段](spk_introduction/info_fields_optional.md)
   * [2. package.tgz 文件](spk_introduction/file_package_tgz.md)
+  * [3. scripts 文件夹](spk_introduction/scripts/)
+    * [script 环境变量](spk_introduction/scripts/env.md)
+    * [script 消息](spk_introduction/scripts/message.md)
   * [3. conf 文件夹](spk_introduction/folder_conf.md)
   * [4. 向导用户界面文件](spk_introduction/wizard_ui_files.md)
 
@@ -43,8 +46,8 @@
   * [3. 解决权限问题](project_tutorial/v1/)
     * [权限配置](project_tutorial/v1/privilege_solution.md)
     * [格式错误](project_tutorial/v1/format_error.md)
-  * [解决格式问题](project_tutorial/v2/)
-  
+  * [4. 解决格式问题](project_tutorial/v2/)
+
 
   
 
