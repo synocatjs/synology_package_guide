@@ -9,71 +9,59 @@ mkdir -p $PKG_DIR
 source /pkgscripts/include/pkg_util.sh
 
 create_package_tgz() {
-    local package_tgz_dir=/tmp/_package_tgz
-    local binary_dir=$package_tgz_dir/usr/local/bin
+	local package_tgz_dir=/tmp/_package_tgz
+	local binary_dir=$package_tgz_dir/usr/local/bin
 
-    ### clear destination directory
-    rm -rf $package_tgz_dir && mkdir -p $package_tgz_dir
+	### clear destination directory
+	rm -rf $package_tgz_dir && mkdir -p $package_tgz_dir
 
-    ### install demo binary
-    mkdir -p $binary_dir
-    
-    if [ -f /source/basic/demo ]; then
-        cp -av /source/basic/demo $binary_dir/
-        echo "Copied demo binary"
-    else
-        echo "Error: basic demo binary not found!"
-        exit 1
-    fi
+	### install demo binary
+	mkdir -p $binary_dir
+	
+	# 修正：/source/mini-app → /source/basic
+	if [ -f /source/basic/demo ]; then
+		cp -av /source/basic/demo $binary_dir/
+	else
+		echo "Error: demo binary not found!"
+		exit 1
+	fi
 
-    ### create package.tgz
-    pkg_make_package $package_tgz_dir "${PKG_DIR}"
+	### create package.tgz
+	pkg_make_package $package_tgz_dir "${PKG_DIR}"
 }
 
 create_spk(){
-    local source_dir="/source/basic"
-    
-    echo "Creating INFO file..."
-    
-    # 生成 INFO 文件
-    if [ -f $source_dir/INFO.sh ]; then
-        (cd $source_dir && ./INFO.sh) > $PKG_DIR/INFO
-        echo "INFO file generated"
-    else
-        echo "Error: INFO.sh not found at $source_dir/INFO.sh"
-        exit 1
-    fi
-    
-    # 复制 scripts 目录（注意路径）
-    if [ -d $source_dir/scripts ]; then
-        cp -av $source_dir/scripts $PKG_DIR/
-        echo "Copied scripts"
-    fi
-    
-    # 复制图标
-    for icon in $source_dir/PACKAGE_ICON*.PNG; do
-        if [ -f "$icon" ]; then
-            cp -av "$icon" $PKG_DIR/
-            echo "Copied icon: $(basename $icon)"
-        fi
-    done
-    
-    # 复制 conf 目录
-    if [ -d $source_dir/conf ]; then
-        cp -av $source_dir/conf $PKG_DIR/
-        echo "Copied conf"
-    fi
+	# 生成 INFO 文件
+	# 修正：/source/mini-app → /source/basic
+	if [ -f /source/basic/INFO.sh ]; then
+		cd /source/basic
+		./INFO.sh > INFO
+		cd - > /dev/null  # 返回原目录
+	fi
+	
+	# 复制文件
+	# 修正：/source/mini-app → /source/basic
+	[ -d /source/basic/scripts ] && cp -av /source/basic/scripts $PKG_DIR/
+	ls /source/basic/PACKAGE_ICON*.PNG 2>/dev/null && cp -av /source/basic/PACKAGE_ICON*.PNG $PKG_DIR
+	[ -d /source/basic/conf ] && cp -av /source/basic/conf $PKG_DIR/
+	
+	# 复制 INFO
+	# 修正：/source/mini-app → /source/basic
+	if [ -f /source/basic/INFO ]; then
+		cp -av /source/basic/INFO $PKG_DIR/
+	elif [ -f /source/basic/INFO.sh ]; then
+		# 如果没有 INFO 文件但有 INFO.sh，重新生成
+		(cd /source/basic && ./INFO.sh) > $PKG_DIR/INFO
+	fi
 
-    ### Create the final spk
-    mkdir -p /image/packages
-    echo "Creating SPK package..."
-    pkg_make_spk ${PKG_DIR} "/image/packages" $(pkg_get_spk_family_name)
-    echo "SPK created successfully"
+	### Create the final spk
+	mkdir -p /image/packages
+	pkg_make_spk ${PKG_DIR} "/image/packages" $(pkg_get_spk_family_name)
 }
 
 main() {
-    create_package_tgz
-    create_spk
+	create_package_tgz
+	create_spk
 }
 
 main "$@"
