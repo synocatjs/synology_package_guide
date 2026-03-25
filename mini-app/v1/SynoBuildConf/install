@@ -18,8 +18,9 @@ create_package_tgz() {
 	### install demo binary
 	mkdir -p $binary_dir
 	
-	if [ -f /source/mini-app/demo ]; then
-		cp -av /source/mini-app/demo $binary_dir
+	# 修正：/source/mini-app → /source/basic
+	if [ -f /source/basic/demo ]; then
+		cp -av /source/basic/demo $binary_dir/
 	else
 		echo "Error: demo binary not found!"
 		exit 1
@@ -31,19 +32,27 @@ create_package_tgz() {
 
 create_spk(){
 	# 生成 INFO 文件
-	if [ -f /source/mini-app/INFO.sh ]; then
-		cd /source/mini-app
+	# 修正：/source/mini-app → /source/basic
+	if [ -f /source/basic/INFO.sh ]; then
+		cd /source/basic
 		./INFO.sh > INFO
-		cd /source/mini-app/SynoBuildConf
+		cd - > /dev/null  # 返回原目录
 	fi
 	
 	# 复制文件
-	[ -d /source/mini-app/scripts ] && cp -av /source/mini-app/scripts $PKG_DIR/scripts
-	ls /source/mini-app/PACKAGE_ICON*.PNG 2>/dev/null && cp -av /source/mini-app/PACKAGE_ICON*.PNG $PKG_DIR
-	[ -d /source/mini-app/conf ] && cp -av /source/mini-app/conf $PKG_DIR
+	# 修正：/source/mini-app → /source/basic
+	[ -d /source/basic/scripts ] && cp -av /source/basic/scripts $PKG_DIR/
+	ls /source/basic/PACKAGE_ICON*.PNG 2>/dev/null && cp -av /source/basic/PACKAGE_ICON*.PNG $PKG_DIR
+	[ -d /source/basic/conf ] && cp -av /source/basic/conf $PKG_DIR/
 	
 	# 复制 INFO
-	[ -f /source/mini-app/INFO ] && cp /source/mini-app/INFO $PKG_DIR/INFO
+	# 修正：/source/mini-app → /source/basic
+	if [ -f /source/basic/INFO ]; then
+		cp -av /source/basic/INFO $PKG_DIR/
+	elif [ -f /source/basic/INFO.sh ]; then
+		# 如果没有 INFO 文件但有 INFO.sh，重新生成
+		(cd /source/basic && ./INFO.sh) > $PKG_DIR/INFO
+	fi
 
 	### Create the final spk
 	mkdir -p /image/packages

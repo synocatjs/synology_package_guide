@@ -22,6 +22,60 @@
 - `SynoBuildConf/build`：构建脚本
 - `SynoBuildConf/install`：安装脚本
 
+
+编译输出
+
+```bash
+sudo ./PkgCreate.py -v 7.2 -p r1000 -c basic
+============================================================
+                   Parse argument result                    
+------------------------------------------------------------
+platforms     : r1000
+env_section   : default
+env_version   : 7.2
+dep_level     : 1
+parallel_proj : 1
+branch        : master
+suffix        : 
+collect       : True
+collecter     : True
+link          : True
+update_link   : False
+build         : True
+install       : True
+only_install  : False
+parallel      : 2
+build_opt     : 
+install_opt   : 
+print_log     : False
+tee           : True
+sdk_ver       : 6.2
+package       : basic
+
+Processing [7.2-72726]: r1000
+============================================================
+              Start to run "Traverse project"               
+------------------------------------------------------------
+Projects: basic
+
+============================================================
+                Start to run "Link Project"      
+.....
+============================================================
+                    Time Cost Statistic                     
+------------------------------------------------------------
+00:00:00: Traverse project
+00:00:00: Link Project
+00:00:00: Build Package
+00:00:00: Install Package[--with-debug]
+00:00:00: Install Package
+00:00:00: Collect package
+
+[SUCCESS] ./PkgCreate.py -v 7.2 -p r1000 -c basic finished.
+```
+
+## 注意
+
 但是当你安装的时候会提示错误：
 
 ![errro](_media/demo_basic_install_error.png)
