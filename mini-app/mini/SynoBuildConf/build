@@ -1,0 +1,12 @@
+#!/bin/bash
+# 空构建脚本 - 不生成任何文件
+
+set -e
+
+case ${MakeClean} in
+    [Yy][Ee][Ss])
+        echo "Cleaning..."
+        ;;
+esac
+
+echo "Build completed (no files generated)"

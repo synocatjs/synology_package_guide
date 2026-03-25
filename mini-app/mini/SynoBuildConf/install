@@ -1,0 +1,67 @@
+#!/bin/bash
+# Install script for basic package
+
+### Use PKG_DIR as working directory.
+PKG_DIR=/tmp/_test_spk
+rm -rf $PKG_DIR
+mkdir -p $PKG_DIR
+
+### get spk packing functions
+source /pkgscripts/include/pkg_util.sh
+
+# 定义包名变量
+PKG_NAME="mini"
+SOURCE_DIR="/source/${PKG_NAME}"
+
+create_package_tgz() {
+	local package_tgz_dir=/tmp/_package_tgz
+	local binary_dir=$package_tgz_dir/usr/local/bin
+
+	### clear destination directory
+	rm -rf $package_tgz_dir && mkdir -p $package_tgz_dir
+
+	### install demo binary
+	mkdir -p $binary_dir
+	
+	# 使用变量
+	if [ -f ${SOURCE_DIR}/demo ]; then
+		cp -av ${SOURCE_DIR}/demo $binary_dir/
+	else
+		echo "Warning: demo binary not found, skipping"
+	fi
+
+	### create package.tgz
+	pkg_make_package $package_tgz_dir "${PKG_DIR}"
+}
+
+create_spk(){
+	# 生成 INFO 文件
+	if [ -f ${SOURCE_DIR}/INFO.sh ]; then
+		cd ${SOURCE_DIR}
+		./INFO.sh > INFO
+		cd - > /dev/null
+	fi
+	
+	# 复制文件
+	[ -d ${SOURCE_DIR}/scripts ] && cp -av ${SOURCE_DIR}/scripts $PKG_DIR/
+	ls ${SOURCE_DIR}/PACKAGE_ICON*.PNG 2>/dev/null && cp -av ${SOURCE_DIR}/PACKAGE_ICON*.PNG $PKG_DIR
+	[ -d ${SOURCE_DIR}/conf ] && cp -av ${SOURCE_DIR}/conf $PKG_DIR/
+	
+	# 复制 INFO
+	if [ -f ${SOURCE_DIR}/INFO ]; then
+		cp -av ${SOURCE_DIR}/INFO $PKG_DIR/
+	elif [ -f ${SOURCE_DIR}/INFO.sh ]; then
+		(cd ${SOURCE_DIR} && ./INFO.sh) > $PKG_DIR/INFO
+	fi
+
+	### Create the final spk
+	mkdir -p /image/packages
+	pkg_make_spk ${PKG_DIR} "/image/packages" $(pkg_get_spk_family_name)
+}
+
+main() {
+	create_package_tgz
+	create_spk
+}
+
+main "$@"
