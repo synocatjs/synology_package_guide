@@ -38,9 +38,9 @@ create_spk(){
 	fi
 	
 	# 复制文件
-	[ -d /source/mini-app/scripts ] && cp -av /source/scripts $PKG_DIR/scripts
+	[ -d /source/scripts ] && cp -av /source/scripts $PKG_DIR/scripts
 	ls /source/PACKAGE_ICON*.PNG 2>/dev/null && cp -av /source/PACKAGE_ICON*.PNG $PKG_DIR
-	[ -d /source/mini-app/conf ] && cp -av /source/conf $PKG_DIR
+	[ -d /source/conf ] && cp -av /source/conf $PKG_DIR
 	
 	# 复制 INFO
 	[ -f /source/INFO ] && cp /source/INFO $PKG_DIR/INFO
