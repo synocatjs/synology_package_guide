@@ -10,6 +10,7 @@ mkdir -p $PKG_DIR
 source /pkgscripts/include/pkg_util.sh
 
 create_package_tgz() {
+	local firewere_version=
 	local package_tgz_dir=/tmp/_package_tgz
 	local binary_dir=$package_tgz_dir/usr/local/bin
 
@@ -18,70 +19,26 @@ create_package_tgz() {
 
 	### install needed file into PKG_DIR
 	mkdir -p $binary_dir
-	
-	# 检查 demo 文件是否存在
-	if [ -f ../demo ]; then
-		cp -av ../demo $binary_dir
-	elif [ -f ../../demo ]; then
-		cp -av ../../demo $binary_dir
-	elif [ -f /source/mini-app/demo ]; then
-		cp -av /source/mini-app/demo $binary_dir
-	else
-		echo "Error: demo binary not found!"
-		exit 1
-	fi
-	
-	# 如果 Makefile 有 install 目标，执行它
-	if grep -q "^install:" ../Makefile 2>/dev/null; then
-		make -C .. install DESTDIR="$package_tgz_dir" INSTALLDIR="$package_tgz_dir"
-	fi
-	
-	# 注意：移除了 make packageinstall，因为你的 Makefile 没有这个目标
+	cp -av demo $binary_dir
+	make install DESTDIR="$package_tgz_dir" INSTALLDIR="$package_tgz_dir"
 
 	### create package.tgz $1: source_dir $2: dest_dir
 	pkg_make_package $package_tgz_dir "${PKG_DIR}"
 }
 
 create_spk(){
-	# 复制 scripts（如果存在）
-	if [ -d ../scripts ]; then
-		cp -av ../scripts $PKG_DIR/scripts
-	elif [ -d ../script ]; then
-		cp -av ../script $PKG_DIR/scripts
-	fi
-	
-	# 复制图标（如果存在）
-	if ls ../PACKAGE_ICON*.PNG 1> /dev/null 2>&1; then
-		cp -av ../PACKAGE_ICON*.PNG $PKG_DIR
-	fi
-	
-	# 复制 conf（如果存在）
-	if [ -d ../conf ]; then
-		cp -av ../conf $PKG_DIR
-	fi
-	
-	# 复制 LICENSE（如果存在）
-	if [ -f ../LICENSE ]; then
-		cp -av ../LICENSE $PKG_DIR
-	fi
+	cp -av scripts $PKG_DIR/scripts
+	cp -av PACKAGE_ICON*.PNG $PKG_DIR
+	cp -av conf $PKG_DIR
+	cp -av LICENSE $PKG_DIR
 
-	# 生成 INFO 文件
-	if [ -f ../INFO.sh ]; then
-		(cd .. && ./INFO.sh > INFO && cp INFO $PKG_DIR/INFO)
-	else
-		# 创建默认 INFO 文件
-		cat > $PKG_DIR/INFO << EOF
-package="mini-app"
-version="1.0.0"
-arch="x86_64"
-maintainer="Your Name"
-distributor="Your Name"
-description="Demo package for Synology DSM"
-displayname="Mini App"
-EOF
-	fi
+	./INFO.sh > INFO
+	cp INFO $PKG_DIR/INFO
 
 	### Create the final spk.
+	# pkg_make_spk <source path> <dest path> <spk file name>
+	# Please put the result spk into /image/packages
+	# spk name functions: pkg_get_spk_name pkg_get_spk_unified_name pkg_get_spk_family_name
 	mkdir -p /image/packages
 	pkg_make_spk ${PKG_DIR} "/image/packages" $(pkg_get_spk_family_name)
 }
