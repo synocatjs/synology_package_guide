@@ -32,6 +32,11 @@
             color: var(--theme-color, #42b983);
             font-weight: bold;
         }
+        body > main > aside > h1 > a > img{
+            width: 100px;
+            height: 100px;
+
+        }
     </style>
 </head>
 
@@ -40,18 +45,29 @@
 
     <script>
         window.$docsify = {
-            name: '群晖套件开发',
+            name: '群晖套件开发手册',
+            nameLink: '/',
             loadSidebar: true,
-            loadNavbar: true,
+             coverpage: true,
+            // loadNavbar: true,
             subMaxLevel: 3,              // 显示到三级标题
             auto2top: true,
             mergeNavbar: true,
+            logo: '/_media/logo.svg',
+
+            //   media: '/_media/',
+            alias: {
+                '/_media/': '/_media/'
+            },
+            repo: 'https://github.com/synocatjs/synology_package_guide',
             themeColor: '#42b983',
+
 
             // 侧边栏配置
             sidebar: {
-                autoCollapse: true,       // 自动折叠其他层级
-                collapseLevel: 2          // 默认折叠级别（1表示折叠二级标题）
+                autoCollapse: false,       // 自动折叠其他层级
+                collapseLevel: 1,         // 默认折叠级别（1表示折叠二级标题）
+                autoHeader: true,
             }
         };
     </script>

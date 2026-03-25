@@ -1,7 +1,7 @@
 # 群晖套件开发手册
 
 <div style="display: flex; flex-direction: column; align-items: center;">
-    <img src="assets/logo.svg" width="256" height="256" alt="Synology Package Logo">
+    <img src="/_media/logo.svg" width="256" height="256" alt="Synology Package Logo">
     <p style="margin-top: 12px; color: #666; font-size: 14px;">synocat（synocatjs）</p>
 </div>
 
@@ -15,8 +15,6 @@
 文中 `toolkit` 表示套件开发项目的根目录，您可以使用任意名称。
 
 为了方便本文沿用 `toolkit`，您可以根据实际情况自行替换。
-
-我们的另一个项目 `synocat` 尝试提供一个脚手架以创建和管理群晖套件所支持的资源。
 
 ## 资源
 

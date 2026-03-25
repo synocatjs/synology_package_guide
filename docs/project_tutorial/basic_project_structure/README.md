@@ -24,4 +24,7 @@
 
 但是当你安装的时候会提示错误：
 
-![errro](/_media/demo_basic_install_error.png)
+![errro](_media/demo_basic_install_error.png)
+
+你可以在 [解决方案](project_tutorial/basic_project_structure/privilege_solution.md) 中尝试解决这个问题。
+

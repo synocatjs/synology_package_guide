@@ -1,6 +1,6 @@
 # 为什么无法安装和卸载案例套件
 
-![remove](/_media/remove_example_package.png)
+![remove](_media/remove_example_package.png)
 
 安装的时候提示出错，好不容易安装上了，但是卸载的时候也提示出错（“系统错误，无法卸载此套件”），为什么？
 
