@@ -8,6 +8,7 @@
 * [三、快速开始](start/)
   * [1. 第一个套件](start/first_package.md)
   * [2. 可用平台](start/available_platforms.md)
+  * [3. 排除错误](start/fix_bug.md)
 
 * [四、开发工具](toolkit/)
   * [1. 构建阶段](toolkit/build_phase.md)
@@ -22,6 +23,9 @@
   * [3. conf 文件夹](spk_introduction/folder_conf.md)
   * [4. 向导用户界面文件](spk_introduction/wizard_ui_files.md)
 
+* [六、项目教程](project_tutorial/)
+  * [1. 基本项目结构](project_tutorial/basic_project_structure/)
+  * [2. 可编译]()
 * [六、DSM 集成](synology_dsm_integration/)
   * [1. 套件文件系统层级标准](synology_dsm_integration/fhs.md)
   * [2. 桌面应用程序](synology_dsm_integration/desktop_application/)
@@ -181,6 +185,7 @@
   * [1. 如何查找 Synology NAS 的 CPU 型号？](common_questions/how_to_find_synology_nas_cpu_model.md)
   * [2. 如何查找平台和架构表？](common_questions/how_to_find_platform_and_architecture.md)
   * [3. 为什么无法安装和卸载](common_questions/why_cannot_install_and_uninstall.md)
+  * [4. 从虚拟环境中下载文件](common_questions/why_cannot_download_file_from_virtual_env.md)
 
 * [九、附录](appendix/)
   * [1. 官方示例包](appendix/example_packages/)

@@ -8,4 +8,5 @@ dev:
 	cd react-demo-app;pnpm run dev
 docs:
 	@echo "docs..."
-	docsify serve docs
+	
+	docsify serve docs -o
