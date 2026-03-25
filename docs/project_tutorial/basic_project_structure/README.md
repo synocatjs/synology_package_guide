@@ -22,8 +22,9 @@
 - `SynoBuildConf/build`：构建脚本
 - `SynoBuildConf/install`：安装脚本
 
+> 或许源代码不是必要的，但是为了演示，我没有删除它。
 
-编译输出
+以上代码的编译输出如下：
 
 ```bash
 sudo ./PkgCreate.py -v 7.2 -p r1000 -c basic
@@ -60,7 +61,11 @@ Projects: basic
 
 ============================================================
                 Start to run "Link Project"      
-.....
+
+......
+其他编译输出
+......
+
 ============================================================
                     Time Cost Statistic                     
 ------------------------------------------------------------
@@ -74,11 +79,13 @@ Projects: basic
 [SUCCESS] ./PkgCreate.py -v 7.2 -p r1000 -c basic finished.
 ```
 
+编译成功，可以尝试安装。
+
 ## 注意
 
 但是当你安装的时候会提示错误：
 
 ![errro](_media/demo_basic_install_error.png)
 
-你可以在 [解决方案](project_tutorial/basic_project_structure/privilege_solution.md) 中尝试解决这个问题。
+你可以跟随步骤在下一节解决它，一步一步理解整个项目的逻辑。
 

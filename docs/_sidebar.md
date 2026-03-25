@@ -29,6 +29,7 @@
   * [3. conf 文件夹](spk_introduction/folder_conf.md)
   * [4. 向导用户界面文件](spk_introduction/wizard_ui_files.md)
 
+
 * 六、项目教程
   * [1. 概述](project_tutorial/README.md)
   * [2. 基本项目结构](project_tutorial/basic_project_structure/)
@@ -37,8 +38,7 @@
     * [demo 文件](project_tutorial/basic_project_structure/demo.md)
     * [install 文件](project_tutorial/basic_project_structure/install.md)
     * [makefile 文件](project_tutorial/basic_project_structure/makefile.md)
-    * [权限的解决方案](project_tutorial/basic_project_structure/privilege_solution.md)
-  * [3. 可编译]()
+  * [3. 解决权限问题](project_tutorial/v1/privilege_solution.md)
 
 * 七、DSM 集成
   * [1. 概述](synology_dsm_integration/README.md)

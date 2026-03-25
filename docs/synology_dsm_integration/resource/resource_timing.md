@@ -1,6 +1,9 @@
 # 资源时机
 
+
 每个 worker 在特定时机获取资源，并在特定时间间隔内持有资源。例如，`/usr/local` 链接器在 `FROM_ENABLE_TO_DISABLE` 间隔内持有资源，即在 `WHEN_ENABLE` 时获取资源，在 `WHEN_DISABLE` 时释放资源。
+
+![资源时机](_media/resource_timing.png)
 
 ---
 
