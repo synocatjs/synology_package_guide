@@ -1,7 +1,7 @@
 # 群晖套件开发手册
 
 <div style="display: flex; flex-direction: column; align-items: center;">
-    <img src="_media/logo.svg" width="256" height="256" alt="Synology Package Logo">
+    <img src="_media/logo.svg" width="256" height="256" alt="Synocat Logo">
     <p style="margin-top: 12px; color: #666; font-size: 14px;">synocat（synocatjs）</p>
 </div>
 
