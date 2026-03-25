@@ -30,7 +30,11 @@
   * [3. scripts 文件夹](spk_introduction/scripts/)
     * [script 环境变量](spk_introduction/scripts/env.md)
     * [script 消息](spk_introduction/scripts/message.md)
-  * [3. conf 文件夹](spk_introduction/folder_conf.md)
+  * [3. conf 文件夹](spk_introduction/conf/)
+    * [权限](spk_introduction/conf/privilege.md)
+    * [资源](spk_introduction/conf/resource.md)
+    * [套件配置](spk_introduction/conf/pkg_conx.md)
+    * [套件依赖](spk_introduction/conf/pkg_deps.md)
   * [4. 向导用户界面文件](spk_introduction/wizard_ui_files.md)
 
 
@@ -47,6 +51,9 @@
     * [权限配置](project_tutorial/v1/privilege_solution.md)
     * [格式错误](project_tutorial/v1/format_error.md)
   * [4. 解决格式问题](project_tutorial/v2/)
+    * [标准格式](project_tutorial/v2/format_solution.md)
+    
+
 
 
   
