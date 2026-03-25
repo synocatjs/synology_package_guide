@@ -16,16 +16,29 @@ create_package_tgz() {
 	### clear destination directory
 	rm -rf $package_tgz_dir && mkdir -p $package_tgz_dir
 
-	### install demo binary
+	### install needed file into PKG_DIR
 	mkdir -p $binary_dir
-	cp -av ../demo $binary_dir
 	
-	### 如果需要使用 make install，可以调用（可选）
-	# 设置 PKG_NAME 环境变量
-	# export PKG_NAME="mini-app"
-	# make -C .. install DESTDIR="$package_tgz_dir"
+	# 检查 demo 文件是否存在
+	if [ -f ../demo ]; then
+		cp -av ../demo $binary_dir
+	elif [ -f ../../demo ]; then
+		cp -av ../../demo $binary_dir
+	elif [ -f /source/mini-app/demo ]; then
+		cp -av /source/mini-app/demo $binary_dir
+	else
+		echo "Error: demo binary not found!"
+		exit 1
+	fi
 	
-	### create package.tgz
+	# 如果 Makefile 有 install 目标，执行它
+	if grep -q "^install:" ../Makefile 2>/dev/null; then
+		make -C .. install DESTDIR="$package_tgz_dir" INSTALLDIR="$package_tgz_dir"
+	fi
+	
+	# 注意：移除了 make packageinstall，因为你的 Makefile 没有这个目标
+
+	### create package.tgz $1: source_dir $2: dest_dir
 	pkg_make_package $package_tgz_dir "${PKG_DIR}"
 }
 
@@ -33,14 +46,16 @@ create_spk(){
 	# 复制 scripts（如果存在）
 	if [ -d ../scripts ]; then
 		cp -av ../scripts $PKG_DIR/scripts
+	elif [ -d ../script ]; then
+		cp -av ../script $PKG_DIR/scripts
 	fi
 	
-	# 复制图标
+	# 复制图标（如果存在）
 	if ls ../PACKAGE_ICON*.PNG 1> /dev/null 2>&1; then
 		cp -av ../PACKAGE_ICON*.PNG $PKG_DIR
 	fi
 	
-	# 复制 conf
+	# 复制 conf（如果存在）
 	if [ -d ../conf ]; then
 		cp -av ../conf $PKG_DIR
 	fi
@@ -50,12 +65,20 @@ create_spk(){
 		cp -av ../LICENSE $PKG_DIR
 	fi
 
-	# 使用现有的 INFO 文件
-	if [ -f ../INFO ]; then
-		cp ../INFO $PKG_DIR/INFO
+	# 生成 INFO 文件
+	if [ -f ../INFO.sh ]; then
+		(cd .. && ./INFO.sh > INFO && cp INFO $PKG_DIR/INFO)
 	else
-		echo "Error: INFO file not found!"
-		exit 1
+		# 创建默认 INFO 文件
+		cat > $PKG_DIR/INFO << EOF
+package="mini-app"
+version="1.0.0"
+arch="x86_64"
+maintainer="Your Name"
+distributor="Your Name"
+description="Demo package for Synology DSM"
+displayname="Mini App"
+EOF
 	fi
 
 	### Create the final spk.
