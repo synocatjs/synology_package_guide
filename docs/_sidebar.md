@@ -21,6 +21,7 @@
   * [3. 参考资料](toolkit/reference.md)
 
 * 五、SPK 包介绍
+
   * [1. 概述](spk_introduction/README.md)
   * [1. INFO 文件介绍](spk_introduction/file_info.md)
     * [1.1 INFO 必须字段](spk_introduction/info_fields_necessary.md)
@@ -31,6 +32,7 @@
 
 
 * 六、项目教程
+
   * [1. 概述](project_tutorial/README.md)
   * [2. 基本项目结构](project_tutorial/basic_project_structure/)
     * [build 文件](project_tutorial/basic_project_structure/build.md)
@@ -38,7 +40,14 @@
     * [demo 文件](project_tutorial/basic_project_structure/demo.md)
     * [install 文件](project_tutorial/basic_project_structure/install.md)
     * [makefile 文件](project_tutorial/basic_project_structure/makefile.md)
-  * [3. 解决权限问题](project_tutorial/v1/privilege_solution.md)
+  * [3. 解决权限问题](project_tutorial/v1/)
+    * [权限配置](project_tutorial/v1/privilege_solution.md)
+    * [格式错误](project_tutorial/v1/format_error.md)
+  * [解决格式问题](project_tutorial/v2/)
+  
+
+  
+
 
 * 七、DSM 集成
   * [1. 概述](synology_dsm_integration/README.md)
