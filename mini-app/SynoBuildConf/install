@@ -31,43 +31,20 @@ create_package_tgz() {
 }
 
 create_spk(){
-	# 使用绝对路径生成 INFO 文件
-	echo "=== Generating INFO file ==="
-    pwd
+	# 生成 INFO 文件
 	if [ -f /source/mini-app/INFO.sh ]; then
-		echo "Found INFO.sh at /source/mini-app/INFO.sh"
 		cd /source/mini-app
 		./INFO.sh > INFO
-		if [ -f INFO ]; then
-			echo "INFO file generated successfully"
-			cat INFO
-		else
-			echo "Error: Failed to generate INFO file"
-			exit 1
-		fi
 		cd /source/mini-app/SynoBuildConf
-	else
-		echo "Error: INFO.sh not found at /source/mini-app/INFO.sh"
-		exit 1
 	fi
 	
-	# 复制 scripts
-	if [ -d /source/mini-app/scripts ]; then
-		cp -av /source/mini-app/scripts $PKG_DIR/scripts
-	fi
+	# 复制文件
+	[ -d /source/mini-app/scripts ] && cp -av /source/mini-app/scripts $PKG_DIR/scripts
+	ls /source/mini-app/PACKAGE_ICON*.PNG 2>/dev/null && cp -av /source/mini-app/PACKAGE_ICON*.PNG $PKG_DIR
+	[ -d /source/mini-app/conf ] && cp -av /source/mini-app/conf $PKG_DIR
 	
-	# 复制图标
-	if ls /source/mini-app/PACKAGE_ICON*.PNG 1> /dev/null 2>&1; then
-		cp -av /source/mini-app/PACKAGE_ICON*.PNG $PKG_DIR
-	fi
-	
-	# 复制 conf
-	if [ -d /source/mini-app/conf ]; then
-		cp -av /source/mini-app/conf $PKG_DIR
-	fi
-
-	# 复制 INFO 到 PKG_DIR
-	cp /source/mini-app/INFO $PKG_DIR/INFO
+	# 复制 INFO
+	[ -f /source/mini-app/INFO ] && cp /source/mini-app/INFO $PKG_DIR/INFO
 
 	### Create the final spk
 	mkdir -p /image/packages
@@ -80,11 +57,3 @@ main() {
 }
 
 main "$@"
-EOF
-
-chmod +x install
-
-# 验证脚本内容
-echo "=== Install script content ==="
-cat install
-echo "=============================="
