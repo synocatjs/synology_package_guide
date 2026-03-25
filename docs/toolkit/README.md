@@ -80,7 +80,7 @@ your_project/
 
 ## 工作流程图
 
-![create package workflow](../assets/create_package_workflow.png)
+![create package workflow](/_media/create_package_workflow.png)
 
 ### 整体结构
 

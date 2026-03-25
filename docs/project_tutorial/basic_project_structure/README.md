@@ -24,4 +24,4 @@
 
 但是当你安装的时候会提示错误：
 
-![errro](assets/demo_basic_install_error.png)
+![errro](/_media/demo_basic_install_error.png)

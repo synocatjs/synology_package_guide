@@ -29,7 +29,7 @@ PkgCreate.py -v ${version} -p ${platform} ${project}  # 在特定平台版本上
 
 ## 构建阶段工作流程
 
-![build stage workflow](../assets/build_stage_workflow.png)
+![build stage workflow](/_media/build_stage_workflow.png)
 
 根据您的 `SynoBuildConf/depend` 文件，`PkgCreate.py` 将按照以下步骤执行构建：
 

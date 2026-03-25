@@ -30,7 +30,7 @@ pkgscripts-ng/PkgCreate.py -i ${project}
 
 ## 打包阶段工作流程
 
-![pack stage workflow](../assets/pack_stage_workflow.png)
+![pack stage workflow](/_media/pack_stage_workflow.png)
 
 1. `PkgCreate.py` 执行构建脚本 `SynoBuildConf/install`
 2. 使用 `INFO.sh` 创建 INFO 文件
