@@ -2,7 +2,7 @@
 
 source /pkgscripts/include/pkg_util.sh
 
-package="mini-app"
+package="basic"
 version="1.0.0"
 arch="$(pkg_get_platform)"
 maintainer="Synocatjs"
