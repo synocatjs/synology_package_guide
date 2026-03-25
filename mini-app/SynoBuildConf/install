@@ -10,35 +10,55 @@ mkdir -p $PKG_DIR
 source /pkgscripts/include/pkg_util.sh
 
 create_package_tgz() {
-	local firewere_version=
 	local package_tgz_dir=/tmp/_package_tgz
 	local binary_dir=$package_tgz_dir/usr/local/bin
 
 	### clear destination directory
 	rm -rf $package_tgz_dir && mkdir -p $package_tgz_dir
 
-	### install needed file into PKG_DIR
+	### install demo binary
 	mkdir -p $binary_dir
-	cp -av demo $binary_dir
-	make install DESTDIR="$package_tgz_dir" INSTALLDIR="$package_tgz_dir"
-
-	### create package.tgz $1: source_dir $2: dest_dir
+	cp -av ../demo $binary_dir
+	
+	### 如果需要使用 make install，可以调用（可选）
+	# 设置 PKG_NAME 环境变量
+	# export PKG_NAME="mini-app"
+	# make -C .. install DESTDIR="$package_tgz_dir"
+	
+	### create package.tgz
 	pkg_make_package $package_tgz_dir "${PKG_DIR}"
 }
 
 create_spk(){
-	cp -av scripts $PKG_DIR/scripts
-	cp -av PACKAGE_ICON*.PNG $PKG_DIR
-	cp -av conf $PKG_DIR
-	cp -av LICENSE $PKG_DIR
+	# 复制 scripts（如果存在）
+	if [ -d ../scripts ]; then
+		cp -av ../scripts $PKG_DIR/scripts
+	fi
+	
+	# 复制图标
+	if ls ../PACKAGE_ICON*.PNG 1> /dev/null 2>&1; then
+		cp -av ../PACKAGE_ICON*.PNG $PKG_DIR
+	fi
+	
+	# 复制 conf
+	if [ -d ../conf ]; then
+		cp -av ../conf $PKG_DIR
+	fi
+	
+	# 复制 LICENSE（如果存在）
+	if [ -f ../LICENSE ]; then
+		cp -av ../LICENSE $PKG_DIR
+	fi
 
-	./INFO.sh > INFO
-	cp INFO $PKG_DIR/INFO
+	# 使用现有的 INFO 文件
+	if [ -f ../INFO ]; then
+		cp ../INFO $PKG_DIR/INFO
+	else
+		echo "Error: INFO file not found!"
+		exit 1
+	fi
 
 	### Create the final spk.
-	# pkg_make_spk <source path> <dest path> <spk file name>
-	# Please put the result spk into /image/packages
-	# spk name functions: pkg_get_spk_name pkg_get_spk_unified_name pkg_get_spk_family_name
 	mkdir -p /image/packages
 	pkg_make_spk ${PKG_DIR} "/image/packages" $(pkg_get_spk_family_name)
 }
