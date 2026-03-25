@@ -9,50 +9,71 @@ mkdir -p $PKG_DIR
 source /pkgscripts/include/pkg_util.sh
 
 create_package_tgz() {
-	local package_tgz_dir=/tmp/_package_tgz
-	local binary_dir=$package_tgz_dir/usr/local/bin
+    local package_tgz_dir=/tmp/_package_tgz
+    local binary_dir=$package_tgz_dir/usr/local/bin
 
-	### clear destination directory
-	rm -rf $package_tgz_dir && mkdir -p $package_tgz_dir
+    ### clear destination directory
+    rm -rf $package_tgz_dir && mkdir -p $package_tgz_dir
 
-	### install demo binary
-	mkdir -p $binary_dir
-	
-	if [ -f /source/basic/demo ]; then
-		cp -av /source/basic/demo $binary_dir
-	else
-		echo "Error: basic demo binary not found!"
-		exit 1
-	fi
+    ### install demo binary
+    mkdir -p $binary_dir
+    
+    if [ -f /source/basic/demo ]; then
+        cp -av /source/basic/demo $binary_dir/
+        echo "Copied demo binary"
+    else
+        echo "Error: basic demo binary not found!"
+        exit 1
+    fi
 
-	### create package.tgz
-	pkg_make_package $package_tgz_dir "${PKG_DIR}"
+    ### create package.tgz
+    pkg_make_package $package_tgz_dir "${PKG_DIR}"
 }
 
 create_spk(){
-	# 生成 INFO 文件
-	if [ -f /source/basic/INFO.sh ]; then
-		cd /source/basic
-		./INFO.sh > INFO
-		cd /source/basic/SynoBuildConf
-	fi
-	
-	# 复制文件
-	[ -d /source/scripts ] && cp -av /source/scripts $PKG_DIR/scripts
-	ls /source/PACKAGE_ICON*.PNG 2>/dev/null && cp -av /source/PACKAGE_ICON*.PNG $PKG_DIR
-	[ -d /source/conf ] && cp -av /source/conf $PKG_DIR
-	
-	# 复制 INFO
-	[ -f /source/INFO ] && cp /source/INFO $PKG_DIR/INFO
+    local source_dir="/source/basic"
+    
+    echo "Creating INFO file..."
+    
+    # 生成 INFO 文件
+    if [ -f $source_dir/INFO.sh ]; then
+        (cd $source_dir && ./INFO.sh) > $PKG_DIR/INFO
+        echo "INFO file generated"
+    else
+        echo "Error: INFO.sh not found at $source_dir/INFO.sh"
+        exit 1
+    fi
+    
+    # 复制 scripts 目录（注意路径）
+    if [ -d $source_dir/scripts ]; then
+        cp -av $source_dir/scripts $PKG_DIR/
+        echo "Copied scripts"
+    fi
+    
+    # 复制图标
+    for icon in $source_dir/PACKAGE_ICON*.PNG; do
+        if [ -f "$icon" ]; then
+            cp -av "$icon" $PKG_DIR/
+            echo "Copied icon: $(basename $icon)"
+        fi
+    done
+    
+    # 复制 conf 目录
+    if [ -d $source_dir/conf ]; then
+        cp -av $source_dir/conf $PKG_DIR/
+        echo "Copied conf"
+    fi
 
-	### Create the final spk
-	mkdir -p /image/packages
-	pkg_make_spk ${PKG_DIR} "/image/packages" $(pkg_get_spk_family_name)
+    ### Create the final spk
+    mkdir -p /image/packages
+    echo "Creating SPK package..."
+    pkg_make_spk ${PKG_DIR} "/image/packages" $(pkg_get_spk_family_name)
+    echo "SPK created successfully"
 }
 
 main() {
-	create_package_tgz
-	create_spk
+    create_package_tgz
+    create_spk
 }
 
 main "$@"
